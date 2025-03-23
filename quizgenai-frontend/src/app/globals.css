@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #090a15;
+  --foreground: #fff;
+  --primary: #5a67d8;
+  --border: 1px solid #5a67d8;
+  --borderRadius: 8px;
 }
 
 @theme inline {
@@ -12,9 +15,25 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@layer components {
+  .bg-hero-custom {
+    background: url("/illustrations/home-page/hero.svg") center -50px / cover no-repeat,
+      radial-gradient(
+        69.74% 43.14% at 76.7% 39.73%,
+        rgba(90, 103, 216, 0.3) 0%,
+        rgba(90, 103, 216, 0) 100%
+      ),
+      radial-gradient(
+        65.92% 55.86% at 28.92% 28.89%,
+        rgba(90, 103, 216, 0.3) 0%,
+        rgba(90, 103, 216, 0) 100%
+      );
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #090a15;
     --foreground: #ededed;
   }
 }
