@@ -15,20 +15,22 @@ export default function Home() {
           </button>
         </div>
       </div>
-      <div className="app-description text-center max-w-200 w-full">
-        <h1 className="text-7xl font-bold text-center mb-[16px]">
-          From idea to scale.
-          <br />
-          Simplified.
-        </h1>
-        <div className="text-2xl font-light text-center max-w-400 mb-[32px]">
-          Ship production apps at lightning speed, and scale to a global
-          audience effortlessly with our next-gen serverless database.
+      <section className="container mx-auto px-4 py-16 md:py-24 flex flex-col items-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-center mb-4 md:mb-6 tracking-tight">
+            From idea to scale.
+            <br />
+            Simplified.
+          </h1>
+          <p className="text-lg md:text-xl xl:text-2xl font-light text-center text-muted-foreground mb-8 md:mb-10 max-w-2xl mx-auto">
+            Ship production apps at lightning speed, and scale to a global
+            audience effortlessly with our next-gen serverless database.
+          </p>
         </div>
         <button className="px-[24px] py-[12px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl">
           Get Started Now
         </button>
-      </div>
+      </section>
       <Marquee />
     </div>
   );
