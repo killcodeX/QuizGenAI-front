@@ -29,6 +29,30 @@
         rgba(90, 103, 216, 0) 100%
       );
   }
+
+  .marquee-container:before {
+    content: "";
+    position: absolute;
+    width: 50%;
+    pointer-events: none;
+    height: 100%;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    background: linear-gradient(90deg, #090a15 0, transparent 25%);
+  }
+
+  .marquee-container:after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    pointer-events: none;
+    height: 100%;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    background: linear-gradient(275deg, #090a15 0, transparent 25%);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
