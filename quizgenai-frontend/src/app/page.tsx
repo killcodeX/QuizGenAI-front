@@ -67,7 +67,7 @@ export default function Home() {
       </div>
       <footer className="h-full mb-8">
         <div className="max-w-4xl mx-auto">
-          <div className="h-[1] w-full bg-gray-500 mb-8" />
+          <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
           <p className="text-lg md:text-xl xl:text-1xl font-light text-center text-muted-foreground text-(--secondary) max-w-2xl mx-auto">
             © 2025 Prisma Data, Inc.
           </p>
