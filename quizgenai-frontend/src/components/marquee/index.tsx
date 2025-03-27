@@ -6,6 +6,7 @@ import Express from "./icons/express.svg";
 import Node from "./icons/node.svg";
 import OpenAI from "./icons/openAi.svg";
 import PostGreSql from "./icons/postgreSql.svg";
+import Tailwind from "./icons/tailwind.svg";
 
 export const Marquee = () => {
   const marq = useRef<HTMLDivElement>(null);
@@ -116,6 +117,15 @@ export const Marquee = () => {
         <div className="marquee-item absolute flex justify-center w-[150px]">
           <Image
             priority
+            src={Tailwind}
+            width={50}
+            height={50}
+            alt="Follow us on Twitter"
+          />
+        </div>
+        <div className="marquee-item absolute flex justify-center w-[150px]">
+          <Image
+            priority
             src={NextJs}
             width={50}
             height={50}
@@ -155,6 +165,15 @@ export const Marquee = () => {
           <Image
             priority
             src={PostGreSql}
+            width={50}
+            height={50}
+            alt="Follow us on Twitter"
+          />
+        </div>
+        <div className="marquee-item absolute flex justify-center w-[150px]">
+          <Image
+            priority
+            src={Tailwind}
             width={50}
             height={50}
             alt="Follow us on Twitter"
