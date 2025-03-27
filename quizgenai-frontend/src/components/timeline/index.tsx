@@ -34,7 +34,7 @@ export const Timeline = () => {
   }, []);
 
   return (
-    <div ref={timelineRef} className="timeline relative max-w-4xl mx-auto px-4">
+    <div ref={timelineRef} className="timeline relative max-w-5xl mx-auto px-2">
       <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-(--primary)/20 transform -translate-x-1/2">
         <span
           ref={progressLineRef}

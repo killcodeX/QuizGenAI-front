@@ -50,19 +50,28 @@ export default function Home() {
         </section>
         <Timeline />
       </div>
-      <footer className="h-screen">
+      <div className="h-full">
         <section className="container mx-auto px-4 py-16 md:py-24 flex flex-col items-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-center mb-4 md:mb-6 tracking-tight">
-              We built something truly unique
+              Ready to try Prisma?
             </h1>
             <p className="text-lg md:text-xl xl:text-1xl font-light text-center text-muted-foreground text-(--secondary) mb-8 md:mb-10 max-w-2xl mx-auto">
-              With our modern serverless architecture, and tight integration
-              with Prisma ORM, we created a database that feels like magic and
-              scales as fast as your ideas.
+              Deploy a database in an instant to experience the power of Prisma.
             </p>
           </div>
+          <button className="px-[24px] py-[12px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl">
+            Get Started Now
+          </button>
         </section>
+      </div>
+      <footer className="h-full mb-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="h-[1] w-full bg-gray-500 mb-8" />
+          <p className="text-lg md:text-xl xl:text-1xl font-light text-center text-muted-foreground text-(--secondary) max-w-2xl mx-auto">
+            © 2025 Prisma Data, Inc.
+          </p>
+        </div>
       </footer>
     </main>
   );
