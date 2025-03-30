@@ -1,18 +1,26 @@
-import Image from "next/image";
+"use client";
 import { Marquee } from "../components/marquee";
 import { Timeline } from "../components/timeline";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   return (
     <main className="w-full">
       <div className="h-screen bg-hero-custom relative flex flex-col justify-center items-center">
         <nav className="navbar absolute top-0 h-20 px-8 w-full flex justify-between items-center">
           <div className="logo">QuizGenAi</div>
           <div className="flex gap-[8px]">
-            <button className="px-[12px] py-[8px] border-1 border-(--primary) rounded-(--borderRadius) font-bold text-1xl">
+            <button
+              className="px-[12px] py-[8px] border-1 border-(--primary) rounded-(--borderRadius) font-bold text-1xl cursor-pointer"
+              onClick={() => router.push("/login")}
+            >
               Log in
             </button>
-            <button className="px-[12px] py-[8px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl">
+            <button
+              className="px-[12px] py-[8px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl cursor-pointer"
+              onClick={() => router.push("/register")}
+            >
               Sign Up
             </button>
           </div>
@@ -29,7 +37,10 @@ export default function Home() {
               audience effortlessly with our next-gen serverless database.
             </p>
           </div>
-          <button className="px-[24px] py-[12px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl">
+          <button
+            className="px-[24px] py-[12px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl cursor-pointer"
+            onClick={() => router.push("/register")}
+          >
             Get Started Now
           </button>
         </section>
@@ -54,13 +65,16 @@ export default function Home() {
         <section className="container mx-auto px-4 py-16 md:py-24 flex flex-col items-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-center mb-4 md:mb-6 tracking-tight">
-              Ready to try Prisma?
+              Ready to try GenQuizAI?
             </h1>
             <p className="text-lg md:text-xl xl:text-1xl font-light text-center text-muted-foreground text-(--secondary) mb-8 md:mb-10 max-w-2xl mx-auto">
               Deploy a database in an instant to experience the power of Prisma.
             </p>
           </div>
-          <button className="px-[24px] py-[12px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl">
+          <button
+            className="px-[24px] py-[12px] bg-(--primary) rounded-(--borderRadius) font-bold text- cursor-pointer"
+            onClick={() => router.push("/register")}
+          >
             Get Started Now
           </button>
         </section>
@@ -68,8 +82,8 @@ export default function Home() {
       <footer className="h-full mb-8">
         <div className="max-w-4xl mx-auto">
           <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
-          <p className="text-lg md:text-xl xl:text-1xl font-light text-center text-muted-foreground text-(--secondary) max-w-2xl mx-auto">
-            © 2025 Prisma Data, Inc.
+          <p className="text-lg md:text-xl xl:text-xl font-light text-center text-muted-foreground text-(--secondary) max-w-2xl mx-auto">
+            © 2025 GenQuizAI, Inc.
           </p>
         </div>
       </footer>

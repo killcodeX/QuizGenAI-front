@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Login() {
@@ -22,9 +23,9 @@ export default function Login() {
     <div className="h-screen relative flex flex-col justify-center items-center">
       <div className="p-6 w-[500]">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold">Welcome back</h1>
+          <h1 className="text-4xl font-bold">Welcome Back!</h1>
           <p className="text-xl text-(--secondary)">
-            Please enter your details
+            Please enter your login details to continue.
           </p>
         </div>
         <form
@@ -81,12 +82,12 @@ export default function Login() {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-width="2"
+                    strokeWidth="2"
                     d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"
                   />
                   <path
                     stroke="currentColor"
-                    stroke-width="2"
+                    strokeWidth="2"
                     d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                   />
                 </svg>
@@ -106,7 +107,7 @@ export default function Login() {
             className="px-[12px] py-[8px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl"
             disabled={loading}
           >
-            {loading ? "Registering..." : "Register"}
+            {loading ? "Loging..." : "Log in"}
           </button>
         </form>
         <div className="inline-flex items-center justify-center w-full">
@@ -129,13 +130,19 @@ export default function Login() {
               viewBox="0 0 18 19"
             >
               <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M8.842 18.083a8.8 8.8 0 0 1-8.65-8.948 8.841 8.841 0 0 1 8.8-8.652h.153a8.464 8.464 0 0 1 5.7 2.257l-2.193 2.038A5.27 5.27 0 0 0 9.09 3.4a5.882 5.882 0 0 0-.2 11.76h.124a5.091 5.091 0 0 0 5.248-4.057L14.3 11H9V8h8.34c.066.543.095 1.09.088 1.636-.086 5.053-3.463 8.449-8.4 8.449l-.186-.002Z"
-                clip-rule="evenodd"
+                clipRule="evenodd"
               />
             </svg>
             Sign in with Google
           </button>
+        </div>
+        <div className="mt-2 text-center text-(--secondary)">
+          Not member yet?{" "}
+          <Link className="underline" href="/register">
+            Create an account
+          </Link>
         </div>
       </div>
     </div>
