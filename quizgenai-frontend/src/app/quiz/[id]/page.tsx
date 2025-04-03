@@ -1,16 +1,6 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { getData } from "../../../mockData";
-import { Pie } from "react-chartjs-2";
-import "chart.js/auto";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import { Toaster } from "sonner";
 import QuizModal from "./quizModal";
 
@@ -114,7 +104,7 @@ export default function QuizQuestions() {
   return (
     <div className="h-screen relative overflow-hidden quiz-container">
       <Toaster />
-      <div className="quiz-scroll-counter fixed top-1/2 right-10 z-1 flex flex-col gap-3 transform -translate-y-1/2">
+      <div className="quiz-scroll-counter flex flex-col gap-3 fixed top-100 left-1/2 z-1 md:top-1/2 md:right-10 md:left-auto -rotate-90 md:rotate-0 transform md:-translate-y-1/2 ">
         {quizes.map((_: any, index: number) => (
           <button
             key={index}
@@ -168,6 +158,8 @@ export default function QuizQuestions() {
       {/* Modal for showing quiz results */}
       {showResults && (
         <QuizModal
+          showResults={showResults}
+          setShowResults={setShowResults}
           correctCount={correctCount}
           wrongCount={wrongCount}
           quizes={quizes}
@@ -177,75 +169,6 @@ export default function QuizQuestions() {
   );
 }
 
-{
-  /* <Dialog open={showResults} onOpenChange={setShowResults}>
-        <DialogTrigger asChild>
-          <button className="hidden"></button>
-        </DialogTrigger>
-        <DialogContent className="max-w-lg p-6 text-center bg-gradient-to-br from-(--background)/80 to-(--background)/40 backdrop-blur-md border border-white/20 shadow-xl">
-          <DialogHeader>
-            <DialogTitle className="text-center text-2xl font-bold">
-              Quiz Results
-            </DialogTitle>
-          </DialogHeader>
-          <div className="flex justify-center">
-            <div className="w-64 h-64">
-              <Pie
-                data={{
-                  labels: ["Correct", "Wrong"],
-                  datasets: [
-                    {
-                      data: [correctCount, wrongCount],
-                      backgroundColor: [
-                        "rgba(111, 190, 250, 0.8)", // Soft blue with transparency
-                        "rgba(191, 147, 252, 0.8)", // Lavender purple with transparency
-                      ],
-                      borderColor: [
-                        "rgba(111, 190, 250, 0.2)",
-                        "rgba(191, 147, 252, 0.2)",
-                      ],
-                      borderWidth: 2,
-                    },
-                  ],
-                }}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      display: false, // This removes the labels
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-          <p className="text-lg mt-4 font-semibold">
-            Score: {score.toFixed(2)}%
-          </p>
-          <h3 className="text-lg font-bold mt-4">Correct Answers:</h3>
-          <ul className="text-center">
-            {quizes.map((item: any, index: any) => (
-              <li key={index} className="mt-2">
-                <strong>Q{index + 1}: </strong> {item.correct_answer}
-              </li>
-            ))}
-          </ul>
-          <DialogFooter>
-            <button
-              onClick={() => {
-                setSelectedAnswers({});
-                setActiveIndex(0);
-                setShowResults(false);
-              }}
-              className="mt-4 bg-(--primary) text-white px-4 py-2 rounded"
-            >
-              Retry Quiz
-            </button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog> */
-}
 // "use client";
 // import React, { useState, useEffect, useCallback, useRef } from "react";
 // import { getData } from "../../../mockData";
