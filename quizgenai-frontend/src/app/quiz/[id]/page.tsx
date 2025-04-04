@@ -160,6 +160,8 @@ export default function QuizQuestions() {
         <QuizModal
           showResults={showResults}
           setShowResults={setShowResults}
+          setSelectedAnswers={setSelectedAnswers}
+          setActiveIndex={setActiveIndex}
           correctCount={correctCount}
           wrongCount={wrongCount}
           quizes={quizes}

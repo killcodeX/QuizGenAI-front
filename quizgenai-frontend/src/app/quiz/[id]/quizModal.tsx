@@ -9,10 +9,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
 
 interface QuizModalProps {
   showResults: boolean;
   setShowResults: (open: boolean) => void;
+  setSelectedAnswers: ({}: any) => void;
+  setActiveIndex: (val: number) => void;
   correctCount: number;
   wrongCount: number;
   quizes: any[];
@@ -21,10 +24,13 @@ interface QuizModalProps {
 export default function QuizModal({
   showResults,
   setShowResults,
+  setSelectedAnswers,
+  setActiveIndex,
   correctCount,
   wrongCount,
   quizes,
 }: QuizModalProps) {
+  const router = useRouter();
   const score = (correctCount / (correctCount + wrongCount)) * 100;
   const total = correctCount + wrongCount;
 
@@ -116,12 +122,18 @@ export default function QuizModal({
         </div>
         <DialogFooter>
           <button
-            // onClick={() => {
-            //   setSelectedAnswers({});
-            //   setActiveIndex(0);
-            //   setShowResults(false);
-            // }}
-            className="mt-4 bg-(--primary) text-white px-4 py-2 rounded"
+            onClick={() => router.push("/quiz")}
+            className="mt-4 border-1 border-(--primary) text-(--primary) px-4 py-2 rounded hover:bg-(--primary) hover:text-white cursor-pointer"
+          >
+            Go Home
+          </button>
+          <button
+            onClick={() => {
+              setSelectedAnswers({});
+              setActiveIndex(0);
+              setShowResults(false);
+            }}
+            className="mt-4 bg-(--primary) text-white px-4 py-2 rounded cursor-pointer"
           >
             Retry Quiz
           </button>

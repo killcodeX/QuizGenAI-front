@@ -3,6 +3,7 @@
 import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import AvatarDemo from "../../components/avatar";
 
 const topics = [
   {
@@ -47,31 +48,29 @@ export default function QuizPage() {
       <nav className="navbar absolute top-0 h-20 px-8 w-full flex justify-between items-center">
         <div className="logo">QuizGenAi</div>
         <div className="flex gap-[8px]">
-          <button
-            className="px-[12px] py-[8px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl cursor-pointer"
-            onClick={() => router.push("/register")}
-          >
-            Sign Up
-          </button>
+          <AvatarDemo
+            handleClick={() => router.push("/stats")}
+            name="Aaquib Ahmad"
+          />
         </div>
       </nav>
-      <div className="p-6 w-[500]">
+      <div className="p-6 w-full md:w-[500]">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold mb-3">
+          <h1 className="text-3xl md:text-4xl font-bold mb-3">
             Hi User 👋🏻 <br /> Create a Quiz Now!
           </h1>
-          <p className="text-xl text-(--secondary)">
+          <p className="text-lg md:text-xl text-(--secondary)">
             Enter your desired topic, and get ready for a fun, AI-powered quiz
             experience.
           </p>
         </div>
         <form
-          className="max-w-sm mx-auto flex bg-gray-50 rounded-full border border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="max-w-sm mx-auto flex bg-gray-50 rounded-full border border-gray-300 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
           onSubmit={handleSubmit}
         >
           <input
             id="quiz"
-            className="block p-2.5 w-full text-lg text-white px-5 border-transparent focus:outline-none"
+            className="block p-2.5 w-full text-sm md:text-lg text-white px-5 border-transparent focus:outline-none"
             autoComplete="none"
             placeholder="Type any topic..."
             value={topic}
@@ -94,12 +93,12 @@ export default function QuizPage() {
             </svg>
           </button>
         </form>
-        <div className="mt-7 flex gap-3">
+        <div className="mt-7 flex justify-center gap-3 flex-wrap">
           {topics.map((item) => {
             return (
               <div
                 key={item.id}
-                className="p-3 text-sm rounded-full border border-gray-900"
+                className="p-3 text-sm rounded-full border-1 border-gray-600"
               >
                 {item.topic}
               </div>
