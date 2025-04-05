@@ -119,8 +119,8 @@
   }
 
   .bg-glow {
-    box-shadow: inset 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #5a67d8,
-      0 0 20px #5a67d8, 0 0 25px #5a67d8, 0 0 30px #5a67d8, 0 0 35px #5a67d8;
+    box-shadow: inset 0 0 5px #fff, 0 0 5px #fff, 0 0 10px #5a67d8,
+      0 0 5px #5a67d8, 0 0 5px #5a67d8, 0 0 10px #5a67d8, 0 0 5px #5a67d8;
   }
 }
 

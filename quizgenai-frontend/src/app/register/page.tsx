@@ -45,10 +45,10 @@ const RegisterPage = () => {
 
   return (
     <div className="h-screen relative flex flex-col justify-center items-center">
-      <div className="p-6 w-[500]">
+      <div className="p-6 w-full md:w-[500]">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold">Get Started!</h1>
-          <p className="text-xl text-(--secondary)">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Get Started!</h1>
+          <p className="text-lg md:text-xl text-(--secondary)">
             Create your free account in just a few steps.
           </p>
         </div>
@@ -59,7 +59,7 @@ const RegisterPage = () => {
           <div className="form-group">
             <label
               htmlFor="full-name-icon"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium text-white"
             >
               Full Name
             </label>
@@ -88,7 +88,7 @@ const RegisterPage = () => {
           <div className="form-group">
             <label
               htmlFor="email-address-icon"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium text-white"
             >
               Email
             </label>
@@ -118,7 +118,7 @@ const RegisterPage = () => {
           <div className="form-group">
             <label
               htmlFor="password-address-icon"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium text-white"
             >
               Password
             </label>

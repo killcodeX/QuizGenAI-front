@@ -33,12 +33,12 @@ export const TimelineItem = ({
   return (
     <div
       ref={itemRef}
-      className={`timeline-content flex gap-x-[120] items-center mb-16 transition-all duration-1000 ${
+      className={`timeline-content flex gap-x-[20] md:gap-x-[120] items-center mb-16 transition-all duration-1000 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
       } ${isReversed ? "flex-row-reverse space-x-reverse" : ""}`}
     >
       <div
-        className={`flex-1 shadow-lg p-6 sm:p-2 ${
+        className={`flex-1 shadow-lg p-2 md:p-6 ${
           isReversed ? "text-right" : "text-left"
         }`}
       >

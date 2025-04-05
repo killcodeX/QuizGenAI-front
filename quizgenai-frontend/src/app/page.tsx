@@ -32,7 +32,7 @@ export default function Home() {
               <br />
               Simplified.
             </h1>
-            <p className="text-lg md:text-xl xl:text-2xl font-light text-center text-muted-foreground mb-8 md:mb-10 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl xl:text-2xl font-light text-white text-center text-muted-foreground mb-8 md:mb-10 max-w-2xl mx-auto">
               Ship production apps at lightning speed, and scale to a global
               audience effortlessly with our next-gen serverless database.
             </p>

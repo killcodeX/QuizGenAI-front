@@ -2,12 +2,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import SonnerDemo from "../../components/toast";
 
 export default function Login() {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { data: session } = useSession();
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -17,14 +20,35 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    SonnerDemo();
+
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: userData.email,
+        password: userData.password,
+      });
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        // Redirect to dashboard or home page after successful login
+        router.push("/dashboard"); // or wherever you want to redirect
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="h-screen relative flex flex-col justify-center items-center">
-      <div className="p-6 w-[500]">
+      <div className="p-6 w-full md:w-[500]">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold">Welcome Back!</h1>
-          <p className="text-xl text-(--secondary)">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome Back!</h1>
+          <p className="text-lg md:text-xl text-(--secondary)">
             Please enter your login details to continue.
           </p>
         </div>
@@ -35,7 +59,7 @@ export default function Login() {
           <div className="form-group">
             <label
               htmlFor="email-address-icon"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium text-white"
             >
               Email
             </label>
@@ -57,6 +81,7 @@ export default function Login() {
                 id="email-address-icon"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="name@xyz.com"
+                name="email"
                 value={userData.email}
                 onChange={handleChange}
               />
@@ -65,7 +90,7 @@ export default function Login() {
           <div className="form-group">
             <label
               htmlFor="password-address-icon"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              className="block mb-2 text-sm font-medium text-white"
             >
               Password
             </label>
@@ -97,6 +122,7 @@ export default function Login() {
                 id="password-address-icon"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="•••••••••"
+                name="password"
                 value={userData.password}
                 onChange={handleChange}
               />
