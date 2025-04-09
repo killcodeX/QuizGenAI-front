@@ -1,9 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import SonnerDemo from "../../components/toast";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Login() {
   const [userData, setUserData] = useState({ email: "", password: "" });
@@ -11,6 +10,8 @@ export default function Login() {
   const [error, setError] = useState("");
   const { data: session } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const hasShownError = useRef(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -19,21 +20,21 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
-    SonnerDemo();
 
     try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: userData.email,
-        password: userData.password,
+      const res = await fetch("http://localhost:8000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
       });
 
-      if (result?.error) {
-        setError(result.error);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Login failed");
       } else {
         // Redirect to dashboard or home page after successful login
-        router.push("/dashboard"); // or wherever you want to redirect
+        router.push("/"); // or wherever you want to redirect
       }
     } catch (err) {
       setError("An unexpected error occurred");
@@ -43,15 +44,39 @@ export default function Login() {
     }
   };
 
+  // Add this near the top of your file but inside your component
+  useEffect(() => {
+    // Run only once on component mount
+    const errorMessage = new URLSearchParams(window.location.search).get(
+      "error"
+    );
+
+    if (errorMessage) {
+      console.log("Initial error check:", errorMessage);
+      setError(errorMessage);
+
+      // Clear the URL parameter
+      window.history.replaceState({}, "", "/login");
+    }
+  }, []); // Empty dependency array - runs only once
+
+  // Then remove any other error handling code
+
   return (
     <div className="h-screen relative flex flex-col justify-center items-center">
+      {/* {error && <div className="text"></div>} */}
       <div className="p-6 w-full md:w-[500]">
-        <div className="mb-10 text-center">
+        <div className="mb-3 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome Back!</h1>
           <p className="text-lg md:text-xl text-(--secondary)">
             Please enter your login details to continue.
           </p>
         </div>
+        {error && (
+          <div className="mx-w-300 border-1 border-red-800 bg-red-200 text-red-800 p-2 mb-5 text-center rounded-lg">
+            {error}
+          </div>
+        )}
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-y-[16] max-w-sm mx-auto"

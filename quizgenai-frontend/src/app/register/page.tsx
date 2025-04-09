@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 const RegisterPage = () => {
   const [userData, setUserData] = useState({
@@ -13,6 +14,12 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { data: session } = useSession();
+
+  // Redirect if already logged in
+  if (session) {
+    router.push("/quiz");
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -24,7 +31,7 @@ const RegisterPage = () => {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch("http://localhost:8000/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
@@ -32,26 +39,58 @@ const RegisterPage = () => {
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.message || "Registration failed");
+      if (!res.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
 
-      // Redirect to login page
-      router.push("/login");
-    } catch (err: any) {
-      setError(err.message);
+      // Store the token in a cookie
+      document.cookie = `token=${data.token}; path=/;`;
+
+      // Registration successful
+      toast.success("Registration successful", {
+        description: "Your account has been created",
+      });
+
+      router.push("/test");
+    } catch (error: any) {
+      toast.error("Registration failed", {
+        description: error.message || "Please try again later",
+      });
     } finally {
       setLoading(false);
     }
   };
 
+  // Add this near the top of your file but inside your component
+  useEffect(() => {
+    // Run only once on component mount
+    const errorMessage = new URLSearchParams(window.location.search).get(
+      "error"
+    );
+
+    if (errorMessage) {
+      console.log("Initial error check:", errorMessage);
+      setError(errorMessage);
+
+      // Clear the URL parameter
+      window.history.replaceState({}, "", "/login");
+    }
+  }, []); // Empty dependency array - runs only once
+
   return (
     <div className="h-screen relative flex flex-col justify-center items-center">
       <div className="p-6 w-full md:w-[500]">
-        <div className="mb-10 text-center">
+        <div className="mb-3 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Get Started!</h1>
           <p className="text-lg md:text-xl text-(--secondary)">
             Create your free account in just a few steps.
           </p>
         </div>
+        {error && (
+          <div className="mx-w-300 border-1 border-red-800 bg-red-200 text-red-800 p-2 mb-5 text-center rounded-lg">
+            {error}
+          </div>
+        )}
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-y-[16] max-w-sm mx-auto"
@@ -80,6 +119,7 @@ const RegisterPage = () => {
                 id="full-name-icon"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter your full name"
+                name="fullname"
                 value={userData.fullname}
                 onChange={handleChange}
               />
@@ -110,6 +150,7 @@ const RegisterPage = () => {
                 id="email-address-icon"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="name@xyz.com"
+                name="email"
                 value={userData.email}
                 onChange={handleChange}
               />
@@ -146,9 +187,10 @@ const RegisterPage = () => {
                 </svg>
               </div>
               <input
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 type="password"
                 id="password-address-icon"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                name="password"
                 placeholder="•••••••••"
                 value={userData.password}
                 onChange={handleChange}
