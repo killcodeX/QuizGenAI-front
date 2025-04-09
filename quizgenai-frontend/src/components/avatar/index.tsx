@@ -1,4 +1,5 @@
-import { signOut } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -10,15 +11,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface AvatarProps {
-  handleClick: () => void;
+  image?: string;
   name: string;
 }
 
 export default function AvatarDemo({
-  handleClick,
-  name = "User",
+  name,
+  image = "/blank-user-svgrepo-com.svg",
 }: AvatarProps) {
   const router = useRouter();
+
   const handleLogOut = async () => {
     try {
       // More explicitly clear the cookie with all necessary attributes
@@ -40,8 +42,8 @@ export default function AvatarDemo({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar>
-          {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
-          <AvatarFallback>
+          <AvatarImage src={image} alt={name} />
+          <AvatarFallback className="text-red-900 border-1 border-red-900">
             {name
               .split(" ")
               .map((word) => word[0])

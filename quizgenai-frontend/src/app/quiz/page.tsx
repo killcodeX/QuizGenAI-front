@@ -1,5 +1,6 @@
 // # Quiz Choose Topic Page (Protected)
 "use client";
+import { useSession } from "next-auth/react";
 import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -24,16 +25,39 @@ const topics = [
   },
 ];
 
+interface userProps {
+  name: string;
+  email: string;
+  image?: string;
+  id: string;
+  backendToken: string;
+}
+
 export default function QuizPage() {
   const { user } = useAuth();
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const [userName, setUserName] = useState<userProps>({
+    name: "User",
+    email: "",
+    image: "/blank-user-svgrepo-com.svg",
+    id: "",
+    backendToken: "",
+  });
   const [topic, setTopic] = useState("");
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/login");
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    // Update username when session loads
+    if (session?.user) {
+      setUserName({
+        name: session.user.name || "User",
+        email: session.user.email || "",
+        image: session.user.image || "",
+        id: session.user.id || "",
+        backendToken: session.user.backendToken || "",
+      });
+    }
+  }, [session]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTopic(e.target.value);
@@ -48,16 +72,13 @@ export default function QuizPage() {
       <nav className="navbar absolute top-0 h-20 px-8 w-full flex justify-between items-center">
         <div className="logo">QuizGenAi</div>
         <div className="flex gap-[8px]">
-          <AvatarDemo
-            handleClick={() => router.push("/stats")}
-            name="Aaquib Ahmad"
-          />
+          <AvatarDemo name={userName.name} image={userName.image} />
         </div>
       </nav>
       <div className="p-6 w-full md:w-[500]">
         <div className="mb-10 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-3">
-            Hi User 👋🏻 <br /> Create a Quiz Now!
+            Hi {userName.name.split(" ")[0]} 👋🏻 <br /> Create a Quiz Now!
           </h1>
           <p className="text-lg md:text-xl text-(--secondary)">
             Enter your desired topic, and get ready for a fun, AI-powered quiz
