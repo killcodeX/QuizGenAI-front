@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface AvatarProps {
-  image?: string;
+  image?: string | null;
   name: string;
 }
 
@@ -42,7 +42,7 @@ export default function AvatarDemo({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar>
-          <AvatarImage src={image} alt={name} />
+          {image && <AvatarImage src={image} alt={name} />}
           <AvatarFallback className="text-red-900 border-1 border-red-900">
             {name
               .split(" ")

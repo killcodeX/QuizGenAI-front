@@ -4,26 +4,9 @@ import { useSession } from "next-auth/react";
 import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import AvatarDemo from "../../components/avatar";
-
-const topics = [
-  {
-    id: 1,
-    topic: "Javascript",
-  },
-  {
-    id: 2,
-    topic: "Javascript II",
-  },
-  {
-    id: 3,
-    topic: "Marvel",
-  },
-  {
-    id: 4,
-    topic: "Games",
-  },
-];
+import QuizHeader from "./quizHeader";
+import { Send, Brain, History, Star, Trophy, Sparkles } from "lucide-react";
+import QuizForm from "./quizForm";
 
 interface userProps {
   name: string;
@@ -35,7 +18,7 @@ interface userProps {
 
 export default function QuizPage() {
   const { user } = useAuth();
-  const router = useRouter();
+
   const { data: session, status } = useSession();
   const [userName, setUserName] = useState<userProps>({
     name: "User",
@@ -44,7 +27,37 @@ export default function QuizPage() {
     id: "",
     backendToken: "",
   });
-  const [topic, setTopic] = useState("");
+
+  const [history, setHistory] = useState([]);
+  const [recentQuizzes, setRecentQuizzes] = useState([
+    {
+      id: 1,
+      title: "JavaScript Fundamentals",
+      score: "8/10",
+      date: "April 10, 2025",
+    },
+    {
+      id: 2,
+      title: "Marvel Cinematic Universe",
+      score: "7/10",
+      date: "April 9, 2025",
+    },
+    {
+      id: 3,
+      title: "Classic Video Games",
+      score: "10/10",
+      date: "April 8, 2025",
+    },
+  ]);
+
+  const popularTopics = [
+    { id: 1, name: "JavaScript" },
+    { id: 2, name: "JavaScript II" },
+    { id: 3, name: "Marvel" },
+    { id: 4, name: "Games" },
+    { id: 5, name: "Python" },
+    { id: 6, name: "World History" },
+  ];
 
   useEffect(() => {
     // Update username when session loads
@@ -59,74 +72,120 @@ export default function QuizPage() {
     }
   }, [session]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTopic(e.target.value);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
   return (
     <div className="h-screen relative flex flex-col justify-center items-center">
-      <nav className="navbar absolute top-0 h-20 px-8 w-full flex justify-between items-center">
-        <div className="logo">QuizGenAi</div>
-        <div className="flex gap-[8px]">
-          <AvatarDemo name={userName.name} image={userName.image} />
-        </div>
-      </nav>
-      <div className="p-6 w-full md:w-[500]">
-        <div className="mb-10 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">
-            Hi {userName.name.split(" ")[0]} 👋🏻 <br /> Create a Quiz Now!
-          </h1>
-          <p className="text-lg md:text-xl text-(--secondary)">
-            Enter your desired topic, and get ready for a fun, AI-powered quiz
-            experience.
-          </p>
-        </div>
-        <form
-          className="max-w-sm mx-auto flex bg-gray-50 rounded-full border border-gray-300 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-          onSubmit={handleSubmit}
-        >
-          <input
-            id="quiz"
-            className="block p-2.5 w-full text-sm md:text-lg text-white px-5 border-transparent focus:outline-none"
-            autoComplete="none"
-            placeholder="Type any topic..."
-            value={topic}
-            onChange={handleChange}
-          />
-          <button
-            className="text-white bg-(--primary) hover:bg-(--primary)/90 rounded-full p-3 cursor-pointer"
-            type="submit"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                d="M20.04 2.323c1.016-.355 1.992.621 1.637 1.637l-5.925 16.93c-.385 1.098-1.915 1.16-2.387.097l-2.859-6.432l4.024-4.025a.75.75 0 0 0-1.06-1.06l-4.025 4.024l-6.432-2.859c-1.063-.473-1-2.002.097-2.387z"
-              />
-            </svg>
-          </button>
-        </form>
-        <div className="mt-7 flex justify-center gap-3 flex-wrap">
-          {topics.map((item) => {
-            return (
+      <QuizHeader name={userName.name} image={userName.image} />
+      <div className="p-6 w-full md:w-[800]">
+        {history.length === 0 ? (
+          <div className="text-center">
+            <h1 className="text-3xl md:text-4xl font-bold mb-3">
+              Hi
+              <span className="px-2 text-indigo-300">
+                {userName.name.split(" ")[0]}
+              </span>{" "}
+              👋🏻 <br /> Create a Quiz Now!
+            </h1>
+            <p className="text-lg md:text-xl text-(--secondary)">
+              Enter your desired topic, and get ready for a fun, AI-powered quiz
+              experience.
+            </p>
+          </div>
+        ) : (
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+              Welcome Back{" "}
+              <span className="text-indigo-300">
+                {" "}
+                {userName.name.split(" ")[0]}
+              </span>
+              ! 🎯
+            </h2>
+            <p className="text-lg md:text-xl text-(--secondary)">
+              Ready for another knowledge challenge?
+            </p>
+          </div>
+        )}
+      </div>
+      <QuizForm />
+      {history.length > 0 && (
+        <div className="w-full md:w-[800]">
+          <h3 className="w-full text-xl font-bold flex items-center gap-2 mb-4">
+            <History size={20} className="text-indigo-400" />
+            Your Recent Quizzes
+          </h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            {recentQuizzes.map((quiz) => (
               <div
-                key={item.id}
-                className="p-3 text-sm rounded-full border-1 border-gray-600"
+                key={quiz.id}
+                className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4 hover:bg-gray-800/80 transition-all"
               >
-                {item.topic}
+                <div className="flex justify-between items-start">
+                  <h4 className="font-medium text-lg">{quiz.title}</h4>
+                  <div className="flex items-center gap-1 bg-indigo-900/70 px-2 py-1 rounded-md">
+                    <Trophy size={14} className="text-yellow-400" />
+                    <span className="text-sm">{quiz.score}</span>
+                  </div>
+                </div>
+                <p className="text-gray-400 text-sm mt-2">{quiz.date}</p>
+                <div className="mt-3 flex gap-2">
+                  <button className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 rounded text-sm transition-all">
+                    Retry
+                  </button>
+                  <button className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-all">
+                    Share
+                  </button>
+                </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="w-full md:w-[800] mt-6 flex flex-col justify-center items-center">
+        <h4 className="text-gray-400 mb-3 text-sm uppercase tracking-wide">
+          Trending Topics
+        </h4>
+        <div className="flex flex-wrap gap-2">
+          {popularTopics.map((topic) => (
+            <button
+              key={topic.id}
+              className="px-4 py-2 bg-gray-800/70 hover:bg-indigo-800/70 rounded-full text-sm font-medium border border-gray-700 transition-all"
+            >
+              {topic.name}
+            </button>
+          ))}
         </div>
       </div>
+      {history.length > 0 && (
+        <div className="flex justify-center mt-6">
+          <div className="bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg p-4 inline-flex items-center gap-2">
+            <Star className="text-yellow-400" size={20} />
+            <p className="text-sm">You've completed 14 quizzes this month!</p>
+          </div>
+        </div>
+      )}
+      {history.length === 0 && (
+        <div className="flex flex-col justify-center items-center mt-12 p-6 bg-indigo-950/50 rounded-xl border border-indigo-800/50 max-w-lg mx-auto">
+          <div className="flex items-center gap-3 mb-3">
+            <Sparkles className="text-yellow-400" size={20} />
+            <h3 className="text-xl font-bold">New to QuizGenAI?</h3>
+          </div>
+          <p className="text-gray-300 text-left">
+            Simply enter any topic you're interested in, and our AI will
+            generate a custom quiz just for you. Test your knowledge and track
+            your progress over time!
+          </p>
+        </div>
+      )}
+      {/* Footer with error indicator */}
+      <footer className="fixed bottom-4 left-4">
+        {history.length === 0 && (
+          <div className="flex items-center bg-red-500/80 text-white px-3 py-1 rounded-full text-sm">
+            <span className="font-bold mr-1">N</span>
+            <span>1 Issue</span>
+            <button className="ml-2 text-white/80 hover:text-white">×</button>
+          </div>
+        )}
+      </footer>
     </div>
   );
 }
