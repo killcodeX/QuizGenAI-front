@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface QuizFormProps {
   token: string;
@@ -6,6 +7,7 @@ interface QuizFormProps {
 
 export default function QuizForm(props: QuizFormProps) {
   const { token } = props;
+  const router = useRouter();
   const [topic, setTopic] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -29,6 +31,7 @@ export default function QuizForm(props: QuizFormProps) {
       });
       const data = await res.json();
       console.log("Stats history data:", data);
+      router.push(`/quiz/1`);
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {

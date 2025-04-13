@@ -4,9 +4,20 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import { toast } from "sonner";
+import {
+  validateFullName,
+  validateEmail,
+  validatePassword,
+} from "../../lib/utils";
+import Spinner from "@/components/spinner";
 
 const RegisterPage = () => {
   const [userData, setUserData] = useState({
+    fullname: "",
+    email: "",
+    password: "",
+  });
+  const [validationErrors, setValidationErrors] = useState({
     fullname: "",
     email: "",
     password: "",
@@ -21,12 +32,43 @@ const RegisterPage = () => {
     router.push("/quiz");
   }
 
+  const validateForm = () => {
+    const fullNameError = validateFullName(userData.fullname);
+    const emailError = validateEmail(userData.email);
+    const passwordError = validatePassword(userData.password);
+
+    setValidationErrors({
+      fullname: fullNameError,
+      email: emailError,
+      password: passwordError,
+    });
+
+    return !fullNameError && !emailError && !passwordError;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+
+    // Clear individual field error when user starts typing
+    if (validationErrors[name as keyof typeof validationErrors]) {
+      setValidationErrors({
+        ...validationErrors,
+        [name]: "",
+      });
+    }
+
+    // Clear general error when user makes changes
+    if (error) setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -122,7 +164,13 @@ const RegisterPage = () => {
                 name="fullname"
                 value={userData.fullname}
                 onChange={handleChange}
+                disabled={loading}
               />
+              {validationErrors.fullname && (
+                <p className="mt-1 text-sm text-red-600">
+                  {validationErrors.fullname}
+                </p>
+              )}
             </div>
           </div>
           <div className="form-group">
@@ -153,7 +201,13 @@ const RegisterPage = () => {
                 name="email"
                 value={userData.email}
                 onChange={handleChange}
+                disabled={loading}
               />
+              {validationErrors.email && (
+                <p className="mt-1 text-sm text-red-600">
+                  {validationErrors.email}
+                </p>
+              )}
             </div>
           </div>
           <div className="form-group">
@@ -194,7 +248,13 @@ const RegisterPage = () => {
                 placeholder="•••••••••"
                 value={userData.password}
                 onChange={handleChange}
+                disabled={loading}
               />
+              {validationErrors.password && (
+                <p className="mt-1 text-sm text-red-600">
+                  {validationErrors.password}
+                </p>
+              )}
             </div>
           </div>
           <button
@@ -202,7 +262,13 @@ const RegisterPage = () => {
             className="px-[12px] py-[8px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl"
             disabled={loading}
           >
-            {loading ? "Registering..." : "Register"}
+            {loading ? (
+              <span>
+                <Spinner /> Registering...
+              </span>
+            ) : (
+              "Register"
+            )}
           </button>
         </form>
         <div className="inline-flex items-center justify-center w-full">

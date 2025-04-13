@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import QuizHeader from "./quizHeader";
 import { History, Star, Trophy, Sparkles } from "lucide-react";
 import QuizForm from "./quizForm";
+import Spinner from "@/components/spinner";
 
 interface userProps {
   name: string;
@@ -100,7 +101,7 @@ export default function QuizPage() {
   if (status === "loading" || loading)
     return (
       <div className="min-h-screen flex items-center justify-center text-white">
-        <p>Loading stats...</p>
+        <Spinner />
       </div>
     );
 

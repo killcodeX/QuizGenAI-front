@@ -1,25 +1,59 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { validateEmail, validatePassword } from "../../lib/utils";
+import Spinner from "@/components/spinner";
 
 export default function Login() {
   const [userData, setUserData] = useState({ email: "", password: "" });
+  const [validationErrors, setValidationErrors] = useState({
+    email: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const { data: session } = useSession();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const hasShownError = useRef(false);
+
+  const validateForm = () => {
+    const emailError = validateEmail(userData.email);
+    const passwordError = validatePassword(userData.password);
+
+    setValidationErrors({
+      email: emailError,
+      password: passwordError,
+    });
+
+    return !emailError && !passwordError;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+
+    // Clear individual field error when user starts typing
+    if (validationErrors[name as keyof typeof validationErrors]) {
+      setValidationErrors({
+        ...validationErrors,
+        [name]: "",
+      });
+    }
+
+    // Clear general error when user makes changes
+    if (error) setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
+    setError("");
 
     try {
       const res = await fetch("http://localhost:8000/auth/login", {
@@ -110,6 +144,11 @@ export default function Login() {
                 value={userData.email}
                 onChange={handleChange}
               />
+              {validationErrors.email && (
+                <p className="mt-1 text-sm text-red-600">
+                  {validationErrors.email}
+                </p>
+              )}
             </div>
           </div>
           <div className="form-group">
@@ -151,6 +190,11 @@ export default function Login() {
                 value={userData.password}
                 onChange={handleChange}
               />
+              {validationErrors.password && (
+                <p className="mt-1 text-sm text-red-600">
+                  {validationErrors.password}
+                </p>
+              )}
             </div>
           </div>
           <button
@@ -158,7 +202,13 @@ export default function Login() {
             className="px-[12px] py-[8px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl"
             disabled={loading}
           >
-            {loading ? "Loging..." : "Log in"}
+            {loading ? (
+              <span>
+                <Spinner /> Loging...
+              </span>
+            ) : (
+              "Log in"
+            )}
           </button>
         </form>
         <div className="inline-flex items-center justify-center w-full">

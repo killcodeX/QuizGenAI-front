@@ -10,6 +10,7 @@ import Overview from "./overview";
 import History from "./history";
 import Favorites from "./favorites";
 import { UserData } from "./schema";
+import Spinner from "@/components/spinner";
 
 export default function Stats() {
   const { data: session, status } = useSession();
@@ -62,8 +63,8 @@ export default function Stats() {
 
   if (status === "loading" || loading)
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        <p>Loading stats...</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner />
       </div>
     );
 
