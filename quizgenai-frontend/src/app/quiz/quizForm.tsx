@@ -1,7 +1,13 @@
 import { useState } from "react";
 
-export default function QuizForm() {
-  const [topic, setTopic] = useState("");
+interface QuizFormProps {
+  token: string;
+}
+
+export default function QuizForm(props: QuizFormProps) {
+  const { token } = props;
+  const [topic, setTopic] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTopic(e.target.value);
@@ -9,6 +15,25 @@ export default function QuizForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/quizgenai/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          topic: topic,
+        }),
+      });
+      const data = await res.json();
+      console.log("Stats history data:", data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -19,7 +44,7 @@ export default function QuizForm() {
       <input
         id="quiz"
         className="block p-2.5 w-full text-sm md:text-lg text-white px-5 border-transparent focus:outline-none"
-        autoComplete="none"
+        autoComplete="off"
         placeholder="Type any topic..."
         value={topic}
         onChange={handleChange}

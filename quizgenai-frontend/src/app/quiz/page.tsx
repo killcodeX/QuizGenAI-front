@@ -1,67 +1,90 @@
 // # Quiz Choose Topic Page (Protected)
 "use client";
 import { useSession } from "next-auth/react";
-import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import QuizHeader from "./quizHeader";
-import { Send, Brain, History, Star, Trophy, Sparkles } from "lucide-react";
+import { History, Star, Trophy, Sparkles } from "lucide-react";
 import QuizForm from "./quizForm";
 
 interface userProps {
   name: string;
   email: string;
-  image?: string;
+  image: string | null;
   id: string;
   backendToken: string;
 }
 
 export default function QuizPage() {
-  const { user } = useAuth();
-
   const { data: session, status } = useSession();
+  const [loading, setLoading] = useState<boolean>(true);
   const [userName, setUserName] = useState<userProps>({
     name: "User",
     email: "",
-    image: "/blank-user-svgrepo-com.svg",
+    image: "",
     id: "",
     backendToken: "",
   });
 
   const [history, setHistory] = useState([]);
-  const [recentQuizzes, setRecentQuizzes] = useState([
-    {
-      id: 1,
-      title: "JavaScript Fundamentals",
-      score: "8/10",
-      date: "April 10, 2025",
-    },
-    {
-      id: 2,
-      title: "Marvel Cinematic Universe",
-      score: "7/10",
-      date: "April 9, 2025",
-    },
-    {
-      id: 3,
-      title: "Classic Video Games",
-      score: "10/10",
-      date: "April 8, 2025",
-    },
-  ]);
+  const [popularTopics, setPopularTopics] = useState([]);
+  //   { id: 1, name: "JavaScript" },
+  //   { id: 2, name: "JavaScript II" },
+  //   { id: 3, name: "Marvel" },
+  //   { id: 4, name: "Games" },
+  //   { id: 5, name: "Python" },
+  //   { id: 6, name: "World History" },
+  // ];
 
-  const popularTopics = [
-    { id: 1, name: "JavaScript" },
-    { id: 2, name: "JavaScript II" },
-    { id: 3, name: "Marvel" },
-    { id: 4, name: "Games" },
-    { id: 5, name: "Python" },
-    { id: 6, name: "World History" },
-  ];
+  const fetchUserHistory = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/quizgenai/history", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.backendToken}`,
+        },
+        body: JSON.stringify({
+          email: session?.user?.email,
+        }),
+      });
+      const data = await res.json();
+      console.log("Stats history data:", data);
+      setHistory(data.quizHistory);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchPopularTopic = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/quizgenai/popular", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.backendToken}`,
+        },
+      });
+      const data = await res.json();
+      console.log("Stats popular data:", data);
+      setPopularTopics(data.popularTopics);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Update username when session loads
-    if (session?.user) {
+    // Call API only when session is available and authenticated
+    if (
+      status === "authenticated" &&
+      session?.user?.backendToken &&
+      session?.user?.email
+    ) {
       setUserName({
         name: session.user.name || "User",
         email: session.user.email || "",
@@ -69,8 +92,17 @@ export default function QuizPage() {
         id: session.user.id || "",
         backendToken: session.user.backendToken || "",
       });
+      fetchUserHistory();
+      fetchPopularTopic();
     }
-  }, [session]);
+  }, [status, session]);
+
+  if (status === "loading" || loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <p>Loading stats...</p>
+      </div>
+    );
 
   return (
     <div className="h-screen relative flex flex-col justify-center items-center">
@@ -106,7 +138,7 @@ export default function QuizPage() {
           </div>
         )}
       </div>
-      <QuizForm />
+      <QuizForm token={userName.backendToken} />
       {history.length > 0 && (
         <div className="w-full md:w-[800]">
           <h3 className="w-full text-xl font-bold flex items-center gap-2 mb-4">
@@ -114,7 +146,7 @@ export default function QuizPage() {
             Your Recent Quizzes
           </h3>
           <div className="grid gap-4 md:grid-cols-2">
-            {recentQuizzes.map((quiz) => (
+            {history.map((quiz: any) => (
               <div
                 key={quiz.id}
                 className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4 hover:bg-gray-800/80 transition-all"
@@ -145,7 +177,7 @@ export default function QuizPage() {
           Trending Topics
         </h4>
         <div className="flex flex-wrap gap-2">
-          {popularTopics.map((topic) => (
+          {popularTopics.map((topic: any) => (
             <button
               key={topic.id}
               className="px-4 py-2 bg-gray-800/70 hover:bg-indigo-800/70 rounded-full text-sm font-medium border border-gray-700 transition-all"

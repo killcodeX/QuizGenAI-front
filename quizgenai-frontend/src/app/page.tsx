@@ -2,6 +2,7 @@
 import { Marquee } from "../components/marquee";
 import { Timeline } from "../components/timeline";
 import { useRouter } from "next/navigation";
+import { Brain } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -9,7 +10,12 @@ export default function Home() {
     <main className="w-full">
       <div className="h-screen bg-hero-custom relative flex flex-col justify-center items-center">
         <nav className="navbar absolute top-0 h-20 px-8 w-full flex justify-between items-center">
-          <div className="logo">QuizGenAi</div>
+          <div className="flex items-center gap-2">
+            <Brain className="text-indigo-400" size={28} />
+            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300">
+              QuizGenAI
+            </h1>
+          </div>
           <div className="flex gap-[8px]">
             <button
               className="px-[12px] py-[8px] border-1 border-(--primary) rounded-(--borderRadius) font-bold text-1xl cursor-pointer"

@@ -2,8 +2,6 @@ let obj = {
   response_code: 0,
   results: [
     {
-      type: "multiple",
-      difficulty: "easy",
       category: "Entertainment: Cartoon &amp; Animations",
       question:
         "The song &#039;Little April Shower&#039; features in which Disney cartoon film?",
