@@ -42,14 +42,10 @@ export const TimelineItem = ({
           isReversed ? "text-right" : "text-left"
         }`}
       >
-        <h3 className="text-2xl md:text-xl font-bold">{title}</h3>
-        <p className="text-lg text-gray-700">{description}</p>
+        <h3 className="text-xl md:text-2xl font-bold">{title}</h3>
+        <p className="text-base md:text-lg text-(--secondary)">{description}</p>
       </div>
-      <div className="flex-1 border border-primary/20 rounded-lg p-2 bg-gray-50">
-        <div className="h-48 flex items-center justify-center text-gray-500">
-          {image}
-        </div>
-      </div>
+      <div className="flex-1 flex justify-center p-2">{image}</div>
     </div>
   );
 };

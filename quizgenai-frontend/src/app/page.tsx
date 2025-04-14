@@ -11,20 +11,20 @@ export default function Home() {
       <div className="h-screen bg-hero-custom relative flex flex-col justify-center items-center">
         <nav className="navbar absolute top-0 h-20 px-8 w-full flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Brain className="text-indigo-400" size={28} />
-            <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-300">
+            <Brain className="text-xl text-indigo-400" size={28} />
+            <h1 className="logo text-xl md:text-3xl font-extrabold">
               QuizGenAI
             </h1>
           </div>
-          <div className="flex gap-[8px]">
+          <div className="flex gap-[8]">
             <button
-              className="px-[12px] py-[8px] border-1 border-(--primary) rounded-(--borderRadius) font-bold text-1xl cursor-pointer"
+              className="px-[8] py-[4] md:px-[12] md:py-[8] md:text-1xl border-1 border-(--primary) rounded-(--borderRadius) font-bold  cursor-pointer"
               onClick={() => router.push("/login")}
             >
               Log in
             </button>
             <button
-              className="px-[12px] py-[8px] bg-(--primary) rounded-(--borderRadius) font-bold text-1xl cursor-pointer"
+              className="px-[8] py-[4] md:px-[12] md:py-[8] md:text-1xl bg-(--primary) rounded-(--borderRadius) font-bold cursor-pointer"
               onClick={() => router.push("/register")}
             >
               Sign Up
@@ -55,13 +55,14 @@ export default function Home() {
       <div className="relative flex flex-col items-start">
         <section className="container mx-auto px-4 py-16 md:py-24 flex flex-col items-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-center mb-4 md:mb-6 tracking-tight">
-              We built something truly unique
+            <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-5xl font-extrabold text-center mb-4 md:mb-6 tracking-tight">
+              Unlock Your Knowledge, Effortlessly
             </h1>
-            <p className="text-lg md:text-xl xl:text-1xl font-light text-center text-muted-foreground text-(--secondary) mb-8 md:mb-10 max-w-2xl mx-auto">
-              With our modern serverless architecture, and tight integration
-              with Prisma ORM, we created a database that feels like magic and
-              scales as fast as your ideas.
+            <p className="text-lg md:text-xl xl:text-1xl font-light text-center text-(--secondary) mb-8 md:mb-10 max-w-2xl mx-auto">
+              Take control of your learning with our intuitive quiz app. Simply
+              choose a topic, and Gemini AI will generate engaging questions.
+              Track your progress, analyze your strengths, and enjoy a secure
+              and scalable learning environment.
             </p>
           </div>
         </section>
@@ -73,7 +74,7 @@ export default function Home() {
             <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-center mb-4 md:mb-6 tracking-tight">
               Ready to try GenQuizAI?
             </h1>
-            <p className="text-lg md:text-xl xl:text-1xl font-light text-center text-muted-foreground text-(--secondary) mb-8 md:mb-10 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl xl:text-1xl font-light text-center text-(--secondary) mb-8 md:mb-10 max-w-2xl mx-auto">
               Deploy a database in an instant to experience the power of Prisma.
             </p>
           </div>
@@ -87,7 +88,7 @@ export default function Home() {
       </div>
       <footer className="h-full mb-8">
         <div className="max-w-4xl mx-auto">
-          <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
+          <hr className="h-px my-8 border-0 bg-gray-900" />
           <p className="text-lg md:text-xl xl:text-xl font-light text-center text-muted-foreground text-(--secondary) max-w-2xl mx-auto">
             © 2025 GenQuizAI, Inc.
           </p>

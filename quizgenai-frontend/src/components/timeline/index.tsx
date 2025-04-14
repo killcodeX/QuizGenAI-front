@@ -35,11 +35,11 @@ export const Timeline = () => {
 
   return (
     <div ref={timelineRef} className="timeline relative max-w-5xl mx-auto px-2">
-      <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-(--primary)/20 transform -translate-x-1/2">
+      <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-(--primary)/0 transform -translate-x-1/2">
         <span
           ref={progressLineRef}
           style={{ height: `${scrollProgress}%` }}
-          className="block bg-(--primary) bg-glow transition-all duration-500 ease-out"
+          className="block bg-(--primary) w-[1] bg-glow transition-all duration-500 ease-out"
         />
       </div>
       {timelineData.map((item, index) => (

@@ -1,78 +1,82 @@
 import Image from "next/image";
+import {
+  Wand2,
+  CheckCircle2,
+  ListChecks,
+  BarChart,
+  Lock,
+  Layers,
+  Brain,
+} from "lucide-react";
 
 export const timelineData = [
   {
-    title: "Get a database in an instant",
+    title: "Instant Quiz Generation",
     description:
-      "Deploy a managed database in an instant. Auto-scales to meet your workload needs with zero effort.",
+      "Dive into quizzes on any topic imaginable! Powered by Gemini AI, simply enter your interest and instantly generate a unique set of challenging questions.",
     image: (
-      <div className="flex space-x-2">
-        <Image
-          src="/file.svg"
-          width={200}
-          height={100}
-          alt="Follow us on Twitter"
-        />
+      <div className="text-center text-(--primary) text-glow">
+        <Wand2 size={48} />
       </div>
     ),
   },
   {
-    title: "Redefining how your database works",
+    title: "Real-time Feedback & Scoring",
     description:
-      "Add query-level cache strategies with one line of code to serve data fast from our global edge network.",
+      "Get immediate feedback on your answers as you progress. Our intelligent scoring system tracks your performance in real-time, keeping you engaged and informed.",
     image: (
-      <div className="flex items-center justify-center space-x-4">
-        <Image
-          src="/file.svg"
-          width={200}
-          height={100}
-          alt="Follow us on Twitter"
-        />
+      <div className="text-center text-(--primary) text-glow">
+        <CheckCircle2 size={48} />
       </div>
     ),
   },
   {
-    title: "A collaborative console experience for your team",
+    title: "Comprehensive Quiz History",
     description:
-      "Add query-level cache strategies with one line of code to serve data fast from our global edge network.",
+      "Review your past quiz attempts with detailed records. Analyze your performance on each question and track your learning journey over time.",
     image: (
-      <div className="flex items-center justify-center space-x-4">
-        <Image
-          src="/file.svg"
-          width={200}
-          height={100}
-          alt="Follow us on Twitter"
-        />
+      <div className="text-center text-(--primary) text-glow">
+        <ListChecks size={48} />
       </div>
     ),
   },
   {
-    title: "Maximum developer productivity",
+    title: "Insightful Performance Statistics",
     description:
-      "Add query-level cache strategies with one line of code to serve data fast from our global edge network.",
+      "Visualize your progress with interactive graphs. Understand your strengths and weaknesses across different topics, helping you focus your learning efforts.",
     image: (
-      <div className="flex items-center justify-center space-x-4">
-        <Image
-          src="/file.svg"
-          width={200}
-          height={100}
-          alt="Follow us on Twitter"
-        />
+      <div className="text-center text-(--primary) text-glow">
+        <BarChart size={48} />
       </div>
     ),
   },
   {
-    title: "Maximum developer productivity",
+    title: "Secure User Authentication",
     description:
-      "Add query-level cache strategies with one line of code to serve data fast from our global edge network.",
+      "Your progress and data are securely stored. With Auth.js integration, enjoy a seamless and protected login experience.",
     image: (
-      <div className="flex items-center justify-center space-x-4">
-        <Image
-          src="/file.svg"
-          width={200}
-          height={100}
-          alt="Follow us on Twitter"
-        />
+      <div className="text-center text-(--primary) text-glow">
+        <Lock size={48} />
+      </div>
+    ),
+  },
+  {
+    title: "Flexible and Scalable Architecture",
+    description:
+      "Built with cutting-edge technologies like Next.js, Tailwind CSS, Shadcn UI, Node.js, Express, PostgreSQL, Docker, and Prisma, our app delivers a fast, responsive, and scalable experience",
+    image: (
+      <div className="text-center text-(--primary) text-glow">
+        <Layers size={48} />
+      </div>
+    ),
+  },
+  {
+    title: "Powered by Gemini AI",
+    description:
+      "Experience the power of Google's Gemini AI, providing intelligent quiz generation and ensuring a dynamic and engaging learning experience.",
+    image: (
+      <div className="text-center text-(--primary) text-glow">
+        <Brain size={48} />
       </div>
     ),
   },
