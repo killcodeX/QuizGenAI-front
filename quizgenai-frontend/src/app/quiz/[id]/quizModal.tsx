@@ -45,7 +45,7 @@ export default function QuizModal({
       <DialogTrigger asChild>
         <button className="hidden"></button>
       </DialogTrigger>
-      <DialogContent className="w-[90%] sm:w-[600px] sm:max-w-none md:w-[700px] lg:w-[800px] xl:w-[900px] p-6 text-center bg-gradient-to-br from-(--background)/80 to-(--background)/40 backdrop-blur-md border border-white/20 shadow-xl">
+      <DialogContent className="w-[90%] sm:w-[600px] sm:max-w-none md:w-[700px] lg:w-[800px] xl:w-[900px] p-6 text-center bg-gradient-to-br from-(--background)/40 to-(--background)/20 backdrop-blur-md border border-white/10 shadow-xl">
         <DialogHeader className="flex flex-row justify-between items-center">
           <DialogTitle className="text-xl md:text-2xl font-bold">
             Quiz Results

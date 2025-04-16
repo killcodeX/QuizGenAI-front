@@ -2,6 +2,7 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import QuizHeader from "./quizHeader";
 import { History, Star, Trophy, Sparkles } from "lucide-react";
 import QuizForm from "./quizForm";
@@ -17,6 +18,7 @@ interface userProps {
 
 export default function QuizPage() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [userName, setUserName] = useState<userProps>({
     name: "User",
@@ -181,7 +183,8 @@ export default function QuizPage() {
           {popularTopics.map((topic: any) => (
             <button
               key={topic.id}
-              className="px-4 py-2 bg-gray-800/70 hover:bg-indigo-800/70 rounded-full text-sm font-medium border border-gray-700 transition-all"
+              className="cursor-pointer px-4 py-2 bg-gray-800/70 hover:bg-indigo-800/70 rounded-full text-sm font-medium border border-gray-700 transition-all"
+              onClick={() => router.push(`/quiz/${topic.id}`)}
             >
               {topic.name}
             </button>

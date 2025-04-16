@@ -1,11 +1,25 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter, useParams } from "next/navigation";
 import { getData } from "../../../mockData";
 import { Toaster } from "sonner";
 import QuizModal from "./quizModal";
+import Spinner from "@/components/spinner";
+
+interface Quiz {
+  id: number;
+  question: string;
+  correct_answer: string;
+  incorrect_answers: string[];
+}
 
 export default function QuizQuestions() {
-  const [quizes, setQuizes] = useState<any>([]);
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const params = useParams();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [quizes, setQuizes] = useState<Quiz[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string;
@@ -14,15 +28,37 @@ export default function QuizQuestions() {
   const hasScrolledRef = useRef<boolean>(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    const fetchQuizes = async () => {
-      const response = await getData();
-      const result = await response.json();
-      setQuizes(result.results);
-    };
+  const fetchQuizes = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/quizgenai/quizes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.backendToken}`,
+        },
+        body: JSON.stringify({
+          topic_id: params.id,
+        }),
+      });
+      const data = await res.json();
+      const fakeData: any = await getData();
+      console.log("Stats popular data:", data, fakeData);
+      console.log("Stats fake data:", fakeData);
+      //setQuizes(data.questions);
+      setQuizes(fakeData?.results);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchQuizes();
-  }, []);
+  useEffect(() => {
+    if (status === "authenticated" && session?.user?.backendToken) {
+      fetchQuizes();
+    }
+  }, [status, session]);
 
   const navigateQuiz = useCallback(
     (direction: "up" | "down") => {
@@ -75,6 +111,27 @@ export default function QuizQuestions() {
     };
   }, [handleScroll]);
 
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === "ArrowUp") {
+        navigateQuiz("up");
+      }
+
+      if (event.key === "ArrowDown") {
+        navigateQuiz("down");
+      }
+    },
+    [navigateQuiz]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigateQuiz]); // Add navigateQuiz to the dependency array
+
   // Function to handle answer selection
   const handleAnswerSelect = (questionIndex: number, answer: string) => {
     setSelectedAnswers((prev) => ({
@@ -93,13 +150,36 @@ export default function QuizQuestions() {
   const wrongCount = quizes.length - correctCount;
   const score = (correctCount / quizes.length) * 100;
 
-  if (quizes.length === 0) {
+  const handleShowResult = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:8000/quizgenai//save-quiz-result",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.backendToken}`,
+          },
+          body: JSON.stringify({
+            topic_id: params.id,
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log("Stats popular data:", data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setShowResults(true);
+    }
+  };
+
+  if (quizes.length === 0 && (status === "loading" || loading))
     return (
-      <div className="h-screen flex justify-center items-center">
-        Loading....
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <Spinner />
       </div>
     );
-  }
 
   return (
     <div className="h-screen relative overflow-hidden quiz-container">
@@ -128,19 +208,17 @@ export default function QuizQuestions() {
             <h3 className="text-xl font-bold mb-4">Question {index + 1}</h3>
             <p className="mb-6">{item.question}</p>
             <div className="space-y-3">
-              {[...item.incorrect_answers, item.correct_answer].map(
-                (answer: string, i: number) => (
-                  <div
-                    key={i}
-                    className={`border-1 border-(--primary) rounded-(--borderRadius) p-2 cursor-pointer transition-all hover:bg-(--primary) ${
-                      selectedAnswers[index] === answer ? "bg-(--primary)" : ""
-                    }`}
-                    onClick={() => handleAnswerSelect(index, answer)}
-                  >
-                    {answer}
-                  </div>
-                )
-              )}
+              {item.options.map((answer: string, i: number) => (
+                <div
+                  key={i}
+                  className={`border-1 border-(--primary) rounded-(--borderRadius) p-2 cursor-pointer transition-all hover:bg-(--primary) ${
+                    selectedAnswers[index] === answer ? "bg-(--primary)" : ""
+                  }`}
+                  onClick={() => handleAnswerSelect(index, answer)}
+                >
+                  {answer}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -149,7 +227,7 @@ export default function QuizQuestions() {
         {Object.keys(selectedAnswers).length === quizes.length && (
           <button
             className="px-[12px] py-[8px] border-1 border-(--primary) rounded-(--borderRadius) font-bold text-1xl cursor-pointer text-(--primary) hover:bg-(--primary) hover:text-white"
-            onClick={() => setShowResults(true)}
+            onClick={handleShowResult}
           >
             Show Result
           </button>
@@ -170,179 +248,3 @@ export default function QuizQuestions() {
     </div>
   );
 }
-
-// "use client";
-// import React, { useState, useEffect, useCallback, useRef } from "react";
-// import { getData } from "../../../mockData";
-
-// export default function QuizQuestions() {
-//   const [quizes, setQuizes] = useState<any>([]);
-//   const [activeIndex, setActiveIndex] = useState<number>(0);
-//   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
-//   const [canScroll, setCanScroll] = useState<boolean>(true);
-//   const [selectedAnswers, setSelectedAnswers] = useState<any>([]);
-//   const lastDirectionRef = useRef<string | null>(null);
-
-//   useEffect(() => {
-//     const fetchQuizes = async () => {
-//       const response = await getData();
-//       const result = await response.json();
-//       setQuizes(result.results);
-//     };
-
-//     fetchQuizes();
-//   }, []);
-
-//   const navigateQuiz = useCallback(
-//     (direction: string) => {
-//       //console.log("Navigating:", direction);
-//       lastDirectionRef.current = direction;
-
-//       if (direction === "up" && activeIndex <= 0) {
-//         setCanScroll(true);
-//         return;
-//       }
-
-//       if (direction === "down" && activeIndex >= quizes.length - 1) {
-//         setCanScroll(true);
-//         return;
-//       }
-
-//       setIsTransitioning(true);
-//       setActiveIndex((prev) => (direction === "down" ? prev + 1 : prev - 1));
-
-//       setTimeout(() => {
-//         setIsTransitioning(false);
-//       }, 500);
-//     },
-//     [activeIndex, quizes?.length]
-//   );
-
-//   // Improved approach with debounce-like behavior
-//   const detectScrollStop = useCallback(() => {
-//     console.log("Waiting for scroll reset...");
-
-//     // Instead of checking for specific wheel events, let's use a simple timeout
-//     // This will re-enable scrolling after a short duration regardless of wheel movement
-//     const timer = setTimeout(() => {
-//       console.log("Re-enabling scroll");
-//       setCanScroll(true);
-//     }, 3000); // Wait 1 second before allowing another scroll
-
-//     return () => clearTimeout(timer); // Clean up timer if component changes
-//   }, []);
-
-//   const handleScroll = useCallback(
-//     (event: WheelEvent) => {
-//       if (!canScroll || isTransitioning) {
-//         return;
-//       }
-
-//       if (event.deltaY > 0) {
-//         navigateQuiz("down");
-//       } else {
-//         navigateQuiz("up");
-//       }
-
-//       setCanScroll(false);
-//       const cleanup = detectScrollStop();
-
-//       // Add safety mechanism to ensure canScroll gets reset eventually
-//       const safetyTimer = setTimeout(() => {
-//         setCanScroll(true);
-//         console.log("Safety timer reset canScroll");
-//       }, 2000);
-
-//       return () => {
-//         cleanup();
-//         clearTimeout(safetyTimer);
-//       };
-//     },
-//     [canScroll, isTransitioning, navigateQuiz, detectScrollStop]
-//   );
-
-//   useEffect(() => {
-//     console.log(selectedAnswers);
-//   }, [selectedAnswers]);
-
-//   useEffect(() => {
-//     //console.log("Setting up wheel event listener");
-
-//     document.addEventListener("wheel", handleScroll);
-
-//     return () => {
-//       document.removeEventListener("wheel", handleScroll);
-//     };
-//   }, [handleScroll]);
-
-//   if (quizes.length === 0) {
-//     return (
-//       <div className="h-screen flex justify-center items-center">
-//         Loading....
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="h-screen relative overflow-hidden quiz-container">
-//       <div className="quiz-scroll-counter fixed top-1/2 right-10 flex flex-col gap-3 transform -translate-y-1/2">
-//         {quizes.map((item: any, index: number) => {
-//           return (
-//             <div
-//               key={index}
-//               className={`counter-steps w-[5px] h-[50px] ${
-//                 index === activeIndex ? "bg-(--primary)" : "bg-gray-300"
-//               }`}
-//             ></div>
-//           );
-//         })}
-//       </div>
-//       {quizes.map((item: any, index: number) => {
-//         return (
-//           <div
-//             key={index}
-//             className={`quiz-steps absolute top-0 left-0 w-full h-full flex justify-center items-center transition-opacity duration-500 ${
-//               index === activeIndex
-//                 ? "opacity-100 visible"
-//                 : "opacity-0 invisible"
-//             }`}
-//           >
-//             <div className=" p-8 rounded-lg shadow-md max-w-2xl w-full">
-//               <h3 className="text-xl font-bold mb-4">Question {index + 1}</h3>
-//               <p className="mb-6">{item.question}</p>
-//               <div className="space-y-3">
-//                 {item.incorrect_answers.map((answer: string, index: number) => {
-//                   return (
-//                     <div
-//                       key={index}
-//                       className={`border-1 border-(--primary) rounded-(--borderRadius) p-2 cursor-pointer hover:bg-(--primary) ${
-//                         selectedAnswers[activeIndex] &&
-//                         selectedAnswers[activeIndex].selected === answer &&
-//                         "bg-(--primary)"
-//                       }`}
-//                       onClick={() =>
-//                         setSelectedAnswers([
-//                           ...selectedAnswers,
-//                           {
-//                             selected: answer,
-//                             correct: item.correct_answer,
-//                             point: answer === item.correct_answer,
-//                           },
-//                         ])
-//                       }
-//                     >
-//                       {answer}
-//                     </div>
-//                   );
-//                 })}
-//                 <div className="border-1 border-(--primary) rounded-(--borderRadius) p-2 cursor-pointer hover:bg-(--primary)">
-//                   {item.correct_answer}
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         );
-//       })}
-//     </div>
-//   );
-// }
