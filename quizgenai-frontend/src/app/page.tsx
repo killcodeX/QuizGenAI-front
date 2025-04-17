@@ -34,13 +34,13 @@ export default function Home() {
         <section className="container mx-auto px-4 py-16 md:py-24 flex flex-col items-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-center mb-4 md:mb-6 tracking-tight">
-              From idea to scale.
+              Any topic. Instant quiz.
               <br />
-              Simplified.
+              Simplified learning.
             </h1>
             <p className="text-lg md:text-xl xl:text-2xl font-light text-white text-center text-muted-foreground mb-8 md:mb-10 max-w-2xl mx-auto">
-              Ship production apps at lightning speed, and scale to a global
-              audience effortlessly with our next-gen serverless database.
+              Dive into a world of knowledge with effortless quiz generation
+              powered by Gemini AI, making learning engaging and accessible.
             </p>
           </div>
           <button
