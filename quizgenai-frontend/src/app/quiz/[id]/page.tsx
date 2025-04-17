@@ -11,7 +11,7 @@ interface Quiz {
   id: number;
   question: string;
   correct_answer: string;
-  incorrect_answers: string[];
+  options: string[];
 }
 
 export default function QuizQuestions() {
@@ -45,8 +45,8 @@ export default function QuizQuestions() {
       const fakeData: any = await getData();
       console.log("Stats popular data:", data, fakeData);
       console.log("Stats fake data:", fakeData);
-      //setQuizes(data.questions);
-      setQuizes(fakeData?.results);
+      setQuizes(data.questions);
+      //setQuizes(fakeData?.results);
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {
@@ -64,13 +64,13 @@ export default function QuizQuestions() {
     (direction: "up" | "down") => {
       setActiveIndex((prevIndex) => {
         if (direction === "up" && prevIndex > 0) {
-          console.log(`Navigating UP: New index -> ${prevIndex - 1}`);
+          //console.log(`Navigating UP: New index -> ${prevIndex - 1}`);
           return prevIndex - 1;
         } else if (direction === "down" && prevIndex < quizes.length - 1) {
-          console.log(`Navigating DOWN: New index -> ${prevIndex + 1}`);
+          //console.log(`Navigating DOWN: New index -> ${prevIndex + 1}`);
           return prevIndex + 1;
         }
-        console.log("No change in index.");
+        //console.log("No change in index.");
         return prevIndex;
       });
     },
@@ -80,11 +80,11 @@ export default function QuizQuestions() {
   const handleScroll = useCallback(
     (event: WheelEvent) => {
       if (hasScrolledRef.current) {
-        console.log("Scroll blocked.");
+        //console.log("Scroll blocked.");
         return;
       }
 
-      console.log("Scroll detected.");
+      //console.log("Scroll detected.");
       hasScrolledRef.current = true;
 
       if (event.deltaY > 0) {
@@ -96,7 +96,7 @@ export default function QuizQuestions() {
       if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
       scrollTimeoutRef.current = setTimeout(() => {
         hasScrolledRef.current = false;
-        console.log("Scroll reset.");
+        //console.log("Scroll reset.");
       }, 1000);
     },
     [navigateQuiz]
@@ -208,13 +208,13 @@ export default function QuizQuestions() {
             <h3 className="text-xl font-bold mb-4">Question {index + 1}</h3>
             <p className="mb-6">{item.question}</p>
             <div className="space-y-3">
-              {item.options.map((answer: string, i: number) => (
+              {item.options.map((answer: string, optIndex: number) => (
                 <div
-                  key={i}
+                  key={optIndex}
                   className={`border-1 border-(--primary) rounded-(--borderRadius) p-2 cursor-pointer transition-all hover:bg-(--primary) ${
                     selectedAnswers[index] === answer ? "bg-(--primary)" : ""
                   }`}
-                  onClick={() => handleAnswerSelect(index, answer)}
+                  onClick={() => handleAnswerSelect(index, optIndex + "")}
                 >
                   {answer}
                 </div>
@@ -238,6 +238,7 @@ export default function QuizQuestions() {
         <QuizModal
           showResults={showResults}
           setShowResults={setShowResults}
+          selectedAnswers={selectedAnswers}
           setSelectedAnswers={setSelectedAnswers}
           setActiveIndex={setActiveIndex}
           correctCount={correctCount}

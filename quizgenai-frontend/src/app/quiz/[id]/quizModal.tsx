@@ -19,6 +19,9 @@ interface QuizModalProps {
   correctCount: number;
   wrongCount: number;
   quizes: any[];
+  selectedAnswers: {
+    [key: number]: string;
+  };
 }
 
 export default function QuizModal({
@@ -26,6 +29,7 @@ export default function QuizModal({
   setShowResults,
   setSelectedAnswers,
   setActiveIndex,
+  selectedAnswers,
   correctCount,
   wrongCount,
   quizes,
@@ -54,67 +58,117 @@ export default function QuizModal({
             {score.toFixed(0)}%
           </div>
         </DialogHeader>
-        <div className="dialog-body flex flex-col md:flex-row gap-2 md:gap-10 w-full">
-          <div className="flex justify-center items-center">
-            <div className="w-32 h-32 md:w-64 md:h-64">
-              <Doughnut
-                data={{
-                  labels: ["Correct", "Wrong"],
-                  datasets: [
-                    {
-                      data: [correctCount, wrongCount],
-                      backgroundColor: [
-                        "rgba(111, 190, 250, 0.8)",
-                        "rgba(191, 147, 252, 0.8)",
-                        // "rgba(159, 217, 255, 0.7)",
-                        // "rgba(250, 177, 219, 0.7)",
-                        // "rgba(100, 255, 218, 0.6)",
-                        // "rgba(255, 130, 215, 0.6)",
-                        // "rgba(255, 255, 255, 0.7)",
-                        // "rgba(224, 231, 255, 0.7)",
-                        // "rgba(116, 185, 255, 0.8)",
-                        // "rgba(162, 155, 254, 0.8)",
-                      ],
-                      borderColor: [
-                        "rgba(111, 190, 250, 0.2)",
-                        "rgba(191, 147, 252, 0.2)",
-                      ],
-                      borderWidth: 2,
+        <div className="dialog-body flex flex-col gap-2 md:gap-10 w-full">
+          <div className="flex flex-col md:flex-row items-center gap-4 mb-4">
+            <div className="flex justify-center items-center">
+              <div className="w-32 h-32 md:w-64 md:h-64">
+                <Doughnut
+                  data={{
+                    labels: ["Correct", "Wrong"],
+                    datasets: [
+                      {
+                        data: [correctCount, wrongCount],
+                        backgroundColor: [
+                          "rgba(111, 190, 250, 0.8)",
+                          "rgba(191, 147, 252, 0.8)",
+                          // "rgba(159, 217, 255, 0.7)",
+                          // "rgba(250, 177, 219, 0.7)",
+                          // "rgba(100, 255, 218, 0.6)",
+                          // "rgba(255, 130, 215, 0.6)",
+                          // "rgba(255, 255, 255, 0.7)",
+                          // "rgba(224, 231, 255, 0.7)",
+                          // "rgba(116, 185, 255, 0.8)",
+                          // "rgba(162, 155, 254, 0.8)",
+                        ],
+                        borderColor: [
+                          "rgba(111, 190, 250, 0.2)",
+                          "rgba(191, 147, 252, 0.2)",
+                        ],
+                        borderWidth: 2,
+                      },
+                    ],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        display: false, // This removes the labels
+                      },
                     },
-                  ],
-                }}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  plugins: {
-                    legend: {
-                      display: false, // This removes the labels
-                    },
-                  },
-                }}
-              />
+                  }}
+                />
+              </div>
+            </div>
+            <div className="flex-1 flex flex-col w-full gap-2 text-sm">
+              <div className="w-full bg-gray-800 rounded p-2">
+                <div className="text-gray-400 text-xs">Total</div>
+                <div className="text-white font-medium">{total} Questions</div>
+              </div>
+              <div className="flex flex-row gap-2 w-full">
+                <div className="flex-1 bg-gray-800 rounded p-2">
+                  <div className="text-gray-400 text-xs">Correct</div>
+                  <div className="text-white font-medium">{correctCount}</div>
+                </div>
+                <div className="flex-1 bg-gray-800 rounded p-2">
+                  <div className="text-gray-400 text-xs">Incorrect</div>
+                  <div className="text-white font-medium">{wrongCount}</div>
+                </div>
+              </div>
+              {/* <div className="bg-gray-800 rounded p-2">
+                <div className="text-gray-400 text-xs">Time</div>
+                <div className="text-white font-medium">1:45</div>
+              </div> */}
             </div>
           </div>
           <div className="mb-3">
-            <h3 className="text-xl font-semibold mb-4 text-center text-white">
+            <h2 className="text-lg font-bold text-white mb-2">
               Correct Answers
-            </h3>
+            </h2>
 
-            <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
+            <div className="space-y-2 max-h-64 overflow-y-auto">
               {quizes.map((item: any, index: number) => (
                 <div
                   key={index}
-                  className="bg-white/5 backdrop-blur-sm rounded-lg p-2 border-l-4 border-(--primary)"
+                  className="bg-gray-800 rounded p-3 border-l-4 border-(--primary) text-sm"
+                  // className="bg-white/5 backdrop-blur-sm rounded-lg p-2 border-l-4 border-(--primary)"
                 >
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-gray-400 text-sm">Q{index + 1}</span>
-                    <span className="text-left text-sm mt-1 text-white/70">
-                      {item.question}
+                  <div className="flex justify-between mb-3 items-start">
+                    <div className="flex flex-row gap-1">
+                      <span className="text-gray-400 text-sm">
+                        Q{index + 1}
+                      </span>
+                      <span className="text-left text-sm text-white/70">
+                        {item.question}
+                      </span>
+                    </div>
+
+                    <span
+                      className={`text-xs font-medium px-2 py-0.5 rounded ${
+                        selectedAnswers[index] === item.correct_answer
+                          ? "bg-green-900 text-green-200"
+                          : "bg-red-900 text-red-200"
+                      }`}
+                    >
+                      {selectedAnswers[index] === item.correct_answer
+                        ? "Correct"
+                        : "Incorrect"}
                     </span>
                   </div>
-                  <p className="mt-2 text-white font-medium">
-                    {item.correct_answer}
-                  </p>
+                  <div className="flex gap-2 text-xs">
+                    <div className="flex-1 bg-gray-900 p-2 rounded">
+                      <div className="text-gray-400 mb-0.5">Your Answer</div>
+                      <div className="text-white">
+                        {item.options[selectedAnswers[index]]}
+                      </div>
+                    </div>
+                    <div className="flex-1 bg-gray-900 p-2 rounded">
+                      <div className="text-gray-400 mb-0.5">Correct</div>
+                      <div className="text-white">
+                        {item.options[item.correct_answer]}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
