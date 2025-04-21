@@ -6,10 +6,14 @@ import { getData } from "../../../mockData";
 import { Toaster } from "sonner";
 import QuizModal from "./quizModal";
 import Spinner from "@/components/spinner";
+import { useFetch } from "../../../hooks/useFetch";
+import ScrollIndicator from "./scrollIndicator";
+import Question from "./question";
 
 interface Quiz {
   id: number;
   question: string;
+  questionId: string;
   correct_answer: string;
   options: string[];
 }
@@ -22,7 +26,7 @@ export default function QuizQuestions() {
   const [quizes, setQuizes] = useState<Quiz[]>([]);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
-    [key: number]: string;
+    [key: string]: string;
   }>({});
   const [showResults, setShowResults] = useState<boolean>(false);
   const hasScrolledRef = useRef<boolean>(false);
@@ -42,11 +46,9 @@ export default function QuizQuestions() {
         }),
       });
       const data = await res.json();
-      const fakeData: any = await getData();
-      console.log("Stats popular data:", data, fakeData);
-      console.log("Stats fake data:", fakeData);
+      //const fakeData: any = await getData();
+      //console.log("Stats fake data:", data);
       setQuizes(data.questions);
-      //setQuizes(fakeData?.results);
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {
@@ -132,20 +134,37 @@ export default function QuizQuestions() {
     };
   }, [navigateQuiz]); // Add navigateQuiz to the dependency array
 
-  // Function to handle answer selection
-  const handleAnswerSelect = (questionIndex: number, answer: string) => {
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [questionIndex]: answer, // Overwrites previous selection for that question
-    }));
+  // Function to handle answer selection with toggle capability
+  const handleAnswerSelect = (questionId: string, answer: string) => {
+    setSelectedAnswers((prev) => {
+      // If the same answer is already selected, remove it (unselect)
+      if (prev[questionId] === answer) {
+        const { [questionId]: removed, ...rest } = prev;
+        return rest;
+      }
+
+      // Otherwise, set or update the selection
+      return {
+        ...prev,
+        [questionId]: answer,
+      };
+    });
   };
 
   // Calculate score and right/wrong answers
-  const correctCount = Object.keys(selectedAnswers).reduce((count, key) => {
-    return selectedAnswers[Number(key)] === quizes[Number(key)]?.correct_answer
-      ? count + 1
-      : count;
-  }, 0);
+  const correctCount = Object.keys(selectedAnswers).reduce(
+    (count: number, questionId: string) => {
+      // Find the question with matching ID
+      const question = quizes.find((q) => q.questionId === questionId);
+
+      // If question found and answer is correct, increment count
+      return question &&
+        selectedAnswers[questionId] === question?.correct_answer
+        ? count + 1
+        : count;
+    },
+    0
+  );
 
   const wrongCount = quizes.length - correctCount;
   const score = (correctCount / quizes.length) * 100;
@@ -153,7 +172,7 @@ export default function QuizQuestions() {
   const handleShowResult = async () => {
     try {
       const res = await fetch(
-        "http://localhost:8000/quizgenai//save-quiz-result",
+        "http://localhost:8000/quizgenai/save-quiz-result",
         {
           method: "POST",
           headers: {
@@ -161,7 +180,11 @@ export default function QuizQuestions() {
             Authorization: `Bearer ${session?.user?.backendToken}`,
           },
           body: JSON.stringify({
-            topic_id: params.id,
+            userId: session?.user?.id,
+            quizId: params.id,
+            score: score,
+            totalPoints: 5,
+            answers: selectedAnswers,
           }),
         }
       );
@@ -184,45 +207,23 @@ export default function QuizQuestions() {
   return (
     <div className="h-screen relative overflow-hidden quiz-container">
       <Toaster />
-      <div className="quiz-scroll-counter flex flex-col gap-3 fixed top-100 left-1/2 z-1 md:top-1/2 md:right-10 md:left-auto -rotate-90 md:rotate-0 transform md:-translate-y-1/2 ">
-        {quizes.map((_: any, index: number) => (
-          <button
+      <ScrollIndicator
+        activeIndex={activeIndex}
+        setActiveIndex={setActiveIndex}
+        quizes={quizes}
+      />
+      {quizes.map((item: Quiz, index: number) => {
+        return (
+          <Question
             key={index}
-            className={`counter-steps w-[5px] h-[50px] cursor-pointer ${
-              index === activeIndex ? "bg-(--primary)" : "bg-gray-300"
-            }`}
-            onClick={() => setActiveIndex(index)} //setActiveIndex(index)
-          ></button>
-        ))}
-      </div>
-      {quizes.map((item: any, index: number) => (
-        <div
-          key={index}
-          className={`quiz-steps absolute top-0 left-0 w-full h-full flex justify-center items-center transition-opacity duration-500 ${
-            index === activeIndex
-              ? "opacity-100 visible"
-              : "opacity-0 invisible"
-          }`}
-        >
-          <div className="p-8 rounded-lg shadow-md max-w-2xl w-full">
-            <h3 className="text-xl font-bold mb-4">Question {index + 1}</h3>
-            <p className="mb-6">{item.question}</p>
-            <div className="space-y-3">
-              {item.options.map((answer: string, optIndex: number) => (
-                <div
-                  key={optIndex}
-                  className={`border-1 border-(--primary) rounded-(--borderRadius) p-2 cursor-pointer transition-all hover:bg-(--primary) ${
-                    selectedAnswers[index] === answer ? "bg-(--primary)" : ""
-                  }`}
-                  onClick={() => handleAnswerSelect(index, optIndex + "")}
-                >
-                  {answer}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      ))}
+            item={item}
+            index={index}
+            activeIndex={activeIndex}
+            selectedAnswers={selectedAnswers}
+            handleAnswerSelect={handleAnswerSelect}
+          />
+        );
+      })}
       <div className="absolute bottom-10 z-1 w-full flex justify-center">
         {Object.keys(selectedAnswers).length === quizes.length && (
           <button

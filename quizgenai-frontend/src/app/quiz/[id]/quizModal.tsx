@@ -20,7 +20,7 @@ interface QuizModalProps {
   wrongCount: number;
   quizes: any[];
   selectedAnswers: {
-    [key: number]: string;
+    [key: string]: string;
   };
 }
 
@@ -145,12 +145,14 @@ export default function QuizModal({
 
                     <span
                       className={`text-xs font-medium px-2 py-0.5 rounded ${
-                        selectedAnswers[index] === item.correct_answer
+                        item.options[selectedAnswers[item.questionId]] ===
+                        item.options[item.correct_answer]
                           ? "bg-green-900 text-green-200"
                           : "bg-red-900 text-red-200"
                       }`}
                     >
-                      {selectedAnswers[index] === item.correct_answer
+                      {item.options[selectedAnswers[item.questionId]] ===
+                      item.options[item.correct_answer]
                         ? "Correct"
                         : "Incorrect"}
                     </span>
@@ -159,7 +161,7 @@ export default function QuizModal({
                     <div className="flex-1 bg-gray-900 p-2 rounded">
                       <div className="text-gray-400 mb-0.5">Your Answer</div>
                       <div className="text-white">
-                        {item.options[selectedAnswers[index]]}
+                        {item.options[selectedAnswers[item.questionId]]}
                       </div>
                     </div>
                     <div className="flex-1 bg-gray-900 p-2 rounded">
