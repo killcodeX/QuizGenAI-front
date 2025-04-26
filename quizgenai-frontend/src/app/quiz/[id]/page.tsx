@@ -174,7 +174,6 @@ export default function QuizQuestions() {
   const score = (correctCount / quizes.length) * 100;
 
   const handleShowResult = async () => {
-    console.log("session id:", session);
     try {
       const res = await fetch(
         "http://localhost:8000/quizgenai/save-quiz-result",
