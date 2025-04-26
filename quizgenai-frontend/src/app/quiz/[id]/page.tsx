@@ -24,6 +24,9 @@ export default function QuizQuestions() {
   const params = useParams();
   const [loading, setLoading] = useState<boolean>(true);
   const [quizes, setQuizes] = useState<Quiz[]>([]);
+  const [result, setResult] = useState<{
+    [key: string]: string;
+  }>({});
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: string]: string;
@@ -48,6 +51,7 @@ export default function QuizQuestions() {
       const data = await res.json();
       //const fakeData: any = await getData();
       //console.log("Stats fake data:", data);
+      setResult(data);
       setQuizes(data.questions);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -170,6 +174,7 @@ export default function QuizQuestions() {
   const score = (correctCount / quizes.length) * 100;
 
   const handleShowResult = async () => {
+    console.log("session id:", session);
     try {
       const res = await fetch(
         "http://localhost:8000/quizgenai/save-quiz-result",
@@ -181,10 +186,11 @@ export default function QuizQuestions() {
           },
           body: JSON.stringify({
             userId: session?.user?.id,
-            quizId: params.id,
+            topicId: params.id,
+            quizId: result.quizId,
             score: score,
             totalPoints: 5,
-            answers: selectedAnswers,
+            selectedAnswers: selectedAnswers,
           }),
         }
       );

@@ -48,9 +48,10 @@ export const authOptions: NextAuthOptions = {
           // Attach error info to the error URL
           throw new Error(data.message || "Authentication failed");
         }
-
+        // console.log("this is login auth", data);
         // Store the backend token in the user object to access it later
         user.backendToken = data.token;
+        user.id = data.user.id; // Add this line to set the correct ID
         return true;
       } catch (error: any) {
         // Return a special error string that we'll parse in our custom error page
@@ -79,7 +80,9 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      console.log("Redirect called with URL:", url);
+      // console.log("*********************************");
+      // console.log("Redirect called with URL:", url);
+      // console.log("*********************************");
 
       // Handle error redirects
       if (url.startsWith(`${baseUrl}/login?error=`)) {

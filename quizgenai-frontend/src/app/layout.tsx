@@ -3,6 +3,7 @@ import { Providers } from "./providers";
 import { Toaster } from "sonner";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Head from "next/head";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,12 +27,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap"
-        rel="stylesheet"
-      ></link>
+      <Head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Special+Gothic+Expanded+One&display=swap"
+          rel="stylesheet"
+        ></link>
+      </Head>
       <body className={`antialiased`}>
         <Providers>{children}</Providers>
         <Toaster position="top-right" />
