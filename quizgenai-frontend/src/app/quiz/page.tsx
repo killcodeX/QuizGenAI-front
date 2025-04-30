@@ -143,12 +143,20 @@ export default function QuizPage() {
       </div>
       <QuizForm token={userName.backendToken} />
       {history.length > 0 && (
-        <div className="w-full md:w-[800]">
+        <div
+          className={`w-full ${
+            history.length > 1 ? "md:w-[800]" : "md:w-[400]"
+          }`}
+        >
           <h3 className="w-full text-xl font-bold flex items-center gap-2 mb-4">
             <History size={20} className="text-indigo-400" />
             Your Recent Quizzes
           </h3>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div
+            className={`grid gap-4 ${
+              history.length > 1 ? "md:grid-cols-2" : ""
+            }`}
+          >
             {history.map((quiz: any) => (
               <div
                 key={quiz.id}
@@ -163,12 +171,17 @@ export default function QuizPage() {
                 </div>
                 <p className="text-gray-400 text-sm mt-2">{quiz.date}</p>
                 <div className="mt-3 flex gap-2">
-                  <button className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 rounded text-sm transition-all">
+                  <button
+                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 rounded text-sm transition-all"
+                    onClick={() =>
+                      router.push(`/quiz/${quiz.quizId}?fromHistory=true`)
+                    }
+                  >
                     Retry
                   </button>
-                  <button className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-all">
+                  {/* <button className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-all">
                     Share
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))}
@@ -195,7 +208,9 @@ export default function QuizPage() {
         <div className="flex justify-center mt-6">
           <div className="bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg p-4 inline-flex items-center gap-2">
             <Star className="text-yellow-400" size={20} />
-            <p className="text-sm">You've completed 14 quizzes this month!</p>
+            <p className="text-sm">
+              You've completed {history.length} quizzes!
+            </p>
           </div>
         </div>
       )}

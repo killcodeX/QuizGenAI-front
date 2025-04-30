@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { getData } from "../../../mockData";
 import { Toaster } from "sonner";
 import QuizModal from "./quizModal";
@@ -22,6 +22,7 @@ export default function QuizQuestions() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState<boolean>(true);
   const [quizes, setQuizes] = useState<Quiz[]>([]);
   const [result, setResult] = useState<{
@@ -38,6 +39,8 @@ export default function QuizQuestions() {
   const fetchQuizes = async () => {
     try {
       setLoading(true);
+      const isQuizId = searchParams.get("fromHistory") === "true";
+
       const res = await fetch("http://localhost:8000/quizgenai/quizes", {
         method: "POST",
         headers: {
@@ -45,7 +48,7 @@ export default function QuizQuestions() {
           Authorization: `Bearer ${session?.user?.backendToken}`,
         },
         body: JSON.stringify({
-          topic_id: params.id,
+          ...(isQuizId ? { quiz_id: params.id } : { topic_id: params.id }),
         }),
       });
       const data = await res.json();
@@ -187,8 +190,8 @@ export default function QuizQuestions() {
             userId: session?.user?.id,
             topicId: params.id,
             quizId: result.quizId,
-            score: score,
-            totalPoints: 5,
+            score: correctCount,
+            totalPoints: quizes.length,
             selectedAnswers: selectedAnswers,
           }),
         }
