@@ -3,20 +3,21 @@ import { useRouter } from "next/navigation";
 import { HasData, UserData } from "./schema";
 import { Award } from "lucide-react";
 
+interface popProps {
+  count: number;
+  id: string;
+  name: string;
+}
+
 interface favoritesProps {
-  hasData: boolean;
-  userData: UserData | null;
+  popularTopics: popProps[];
 }
 
 export default function Favorites(props: favoritesProps) {
-  const { hasData, userData } = props;
+  const { popularTopics } = props;
   const router = useRouter();
 
-  if (
-    !hasData ||
-    !userData?.favoriteTopics ||
-    userData?.favoriteTopics.length === 0
-  ) {
+  if (popularTopics.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <Award size={64} className="text-gray-500 mb-4" />
@@ -39,11 +40,11 @@ export default function Favorites(props: favoritesProps) {
     <>
       <h2 className="text-xl font-bold mb-6">Your Favorite Topics</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {userData?.favoriteTopics.map((topic, index) => (
+        {popularTopics.map((topic, index) => (
           <div
             key={index}
             className="bg-gray-700 rounded-lg p-5 cursor-pointer hover:bg-gray-600 transition-colors"
-            onClick={() => router.push(`/quiz?topic=${topic.name}`)}
+            onClick={() => router.push(`/quiz/${topic.id}`)}
           >
             <h3 className="font-semibold mb-2">{topic.name}</h3>
             <div className="flex justify-between items-center">

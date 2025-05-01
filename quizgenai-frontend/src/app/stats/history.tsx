@@ -3,15 +3,24 @@ import { useRouter } from "next/navigation";
 import { HasData, UserData } from "./schema";
 import { BookOpen, Clock } from "lucide-react";
 
+interface historyPP {
+  date: string;
+  id: string;
+  quizId: string;
+  score: string;
+  title: string;
+}
+
 interface historyProps {
   hasData: boolean;
   userData: UserData | null;
+  history: historyPP[];
 }
 
 export default function History(props: historyProps) {
-  const { hasData, userData } = props;
+  const { hasData, userData, history } = props;
   const router = useRouter();
-  if (!hasData) {
+  if (history.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
         <Clock size={64} className="text-gray-500 mb-4" />
@@ -31,19 +40,17 @@ export default function History(props: historyProps) {
   return (
     <>
       <h2 className="text-xl font-bold mb-6">Recent Quizzes</h2>
-      {userData?.quizHistory && userData?.quizHistory.length > 0 ? (
+      {history.length > 0 ? (
         <div className="space-y-4">
-          {userData?.quizHistory.map((item, index) => (
+          {history.map((item: historyPP, index) => (
             <div
-              key={index}
+              key={item.id}
               className="bg-gray-700 rounded-lg p-4 flex justify-between items-center"
             >
               <div>
-                <h4 className="font-semibold">
-                  {item.quiz?.title || item.quiz?.topic?.name || "Quiz"}
-                </h4>
+                <h4 className="font-semibold">{item.title}</h4>
                 <p className="text-sm text-gray-400">
-                  {new Date(item.completedAt).toLocaleDateString(undefined, {
+                  {new Date(item.date).toLocaleDateString(undefined, {
                     year: "numeric",
                     month: "short",
                     day: "numeric",
@@ -52,19 +59,19 @@ export default function History(props: historyProps) {
               </div>
               <div className="flex items-center gap-3">
                 <span
-                  className={
-                    item.score >= 0.8
-                      ? "text-green-400"
-                      : item.score >= 0.5
-                      ? "text-yellow-400"
-                      : "text-red-400"
-                  }
+                // className={
+                //   item.score >= 0.8
+                //     ? "text-green-400"
+                //     : item.score >= 0.5
+                //     ? "text-yellow-400"
+                //     : "text-red-400"
+                // }
                 >
-                  {Math.round(item.score * 100)}%
+                  {item.score}
                 </span>
                 <div
                   className="bg-gray-600 p-1.5 rounded-full cursor-pointer hover:bg-gray-500"
-                  onClick={() => router.push(`/quiz/results/${item.id}`)}
+                  onClick={() => router.push(`/quiz/${item.quizId}`)}
                 >
                   <BookOpen size={16} />
                 </div>

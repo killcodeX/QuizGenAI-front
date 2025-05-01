@@ -17,7 +17,55 @@ export default function Stats() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
-  const router = useRouter();
+  const [history, setHistory] = useState([]);
+  const [popularTopics, setPopularTopics] = useState([]);
+
+  const fetchUserData = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/quizgenai/stats", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.backendToken}`,
+        },
+        body: JSON.stringify({
+          email: session?.user?.email,
+        }),
+      });
+      const data = await res.json();
+      console.log("Stats data:", data);
+      setUserData(data);
+      setPopularTopics(data.popularTopics);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUserHistory = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:8000/quizgenai/history", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.backendToken}`,
+        },
+        body: JSON.stringify({
+          email: session?.user?.email,
+        }),
+      });
+      const data = await res.json();
+      console.log("Stats history data:", data);
+      setHistory(data.quizHistory);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Call API only when session is available and authenticated
@@ -26,30 +74,8 @@ export default function Stats() {
       session?.user?.backendToken &&
       session?.user?.email
     ) {
-      const fetchUserData = async () => {
-        try {
-          setLoading(true);
-          const res = await fetch("http://localhost:8000/quizgenai/stats", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${session?.user?.backendToken}`,
-            },
-            body: JSON.stringify({
-              email: session?.user?.email,
-            }),
-          });
-          const data = await res.json();
-          console.log("Stats data:", data);
-          setUserData(data);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
       fetchUserData();
+      fetchUserHistory();
     }
   }, [status, session]);
 
@@ -124,11 +150,15 @@ export default function Stats() {
               )}
 
               {activeTab === "history" && (
-                <History hasData={hasData} userData={userData} />
+                <History
+                  hasData={hasData}
+                  userData={userData}
+                  history={history}
+                />
               )}
 
               {activeTab === "favorites" && (
-                <Favorites hasData={hasData} userData={userData} />
+                <Favorites popularTopics={popularTopics} />
               )}
             </div>
           </div>

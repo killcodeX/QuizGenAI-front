@@ -64,7 +64,7 @@ export default function PerformanceSummary(props: performanceSummaryProps) {
           <div>
             <p className="text-sm text-gray-400">Attempted</p>
             <p className="text-xl font-bold">
-              {hasData ? userData?.performance?.totalQuestions || 0 : 0}
+              {hasData ? userData?.performance?.completedQuizzes || 0 : 0}
             </p>
           </div>
         </div>
@@ -82,10 +82,7 @@ export default function PerformanceSummary(props: performanceSummaryProps) {
           <div>
             <p className="text-sm text-gray-400">Wrong</p>
             <p className="text-xl font-bold">
-              {hasData
-                ? (userData?.performance?.totalQuestions || 0) -
-                  (userData?.performance?.correctAnswers || 0)
-                : 0}
+              {hasData ? userData?.performance?.wrongAnswers || 0 : 0}
             </p>
           </div>
         </div>

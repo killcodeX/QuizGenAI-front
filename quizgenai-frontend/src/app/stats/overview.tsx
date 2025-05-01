@@ -9,17 +9,17 @@ interface overviewProps {
 }
 
 // Calculate accuracy rate
-const getAccuracyRate = (hasData: HasData, userData: UserData) => {
-  if (!hasData || !userData?.performance) return 0;
-  const correct = userData?.performance.correctAnswers || 0;
-  const total = userData?.performance.totalQuestions || 0;
-  return total > 0 ? Math.round((correct / total) * 100) : 0;
-};
+// const getAccuracyRate = (hasData: HasData, userData: UserData) => {
+//   if (!hasData || !userData?.performance) return 0;
+//   const correct = userData?.performance.correctAnswers || 0;
+//   const total = userData?.performance.totalQuestions || 0;
+//   return total > 0 ? Math.round((correct / total) * 100) : 0;
+// };
 
 export default function Overview(props: overviewProps) {
   const { hasData, userData } = props;
   const router = useRouter();
-  if (hasData) {
+  if (!hasData) {
     return (
       <>
         <h2 className="text-xl font-bold mb-6">Welcome to QuizGenAI!</h2>
@@ -77,28 +77,28 @@ export default function Overview(props: overviewProps) {
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-semibold">Accuracy Rate</h3>
             <span className="text-green-400 font-semibold">
-              {getAccuracyRate(hasData, userData)}%
+              {userData?.performance.averageAccuracy}%
             </span>
           </div>
           <div className="w-full bg-gray-600 rounded-full h-2.5">
             <div
               className="bg-green-500 h-2.5 rounded-full"
-              style={{ width: `${getAccuracyRate(hasData, userData)}%` }}
+              style={{ width: `${userData?.performance.averageAccuracy}%` }}
             ></div>
           </div>
         </div>
         <div className="bg-gray-700 rounded-lg p-5">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-semibold">Completion Rate</h3>
+            <h3 className="font-semibold">Attempted Quiz</h3>
             <span className="text-blue-400 font-semibold">
-              {userData?.performance?.completionRate || 0}%
+              {userData?.performance?.totalQuizzes || 0}%
             </span>
           </div>
           <div className="w-full bg-gray-600 rounded-full h-2.5">
             <div
               className="bg-blue-500 h-2.5 rounded-full"
               style={{
-                width: `${userData?.performance?.completionRate || 0}%`,
+                width: `${userData?.performance?.totalQuizzes || 0}%`,
               }}
             ></div>
           </div>

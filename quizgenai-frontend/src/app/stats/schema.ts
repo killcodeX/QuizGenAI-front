@@ -8,9 +8,15 @@ export interface Topic {
 }
 
 export interface Performance {
-  totalQuestions: number;
+  averageAccuracy: number;
+  completedQuizzes: number;
   correctAnswers: number;
-  completionRate: number;
+  id: string;
+  lastUpdated: string;
+  topicsAttempted: number;
+  totalQuizzes: number;
+  userId: string;
+  wrongAnswers: number;
 }
 
 export interface Quiz {
