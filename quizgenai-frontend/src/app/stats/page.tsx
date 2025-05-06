@@ -23,7 +23,7 @@ export default function Stats() {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8000/quizgenai/stats", {
+      const res = await fetch(`${process.env.URL}/quizgenai/stats`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export default function Stats() {
   const fetchUserHistory = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8000/quizgenai/history", {
+      const res = await fetch(`${process.env.URL}/quizgenai/history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

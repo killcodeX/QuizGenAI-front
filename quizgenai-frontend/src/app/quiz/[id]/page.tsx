@@ -41,7 +41,7 @@ export default function QuizQuestions() {
       setLoading(true);
       const isQuizId = searchParams.get("fromHistory") === "true";
 
-      const res = await fetch("http://localhost:8000/quizgenai/quizes", {
+      const res = await fetch(`${process.env.URL}/quizgenai/quizes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -178,24 +178,21 @@ export default function QuizQuestions() {
 
   const handleShowResult = async () => {
     try {
-      const res = await fetch(
-        "http://localhost:8000/quizgenai/save-quiz-result",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.user?.backendToken}`,
-          },
-          body: JSON.stringify({
-            userId: session?.user?.id,
-            topicId: params.id,
-            quizId: result.quizId,
-            score: correctCount,
-            totalPoints: quizes.length,
-            selectedAnswers: selectedAnswers,
-          }),
-        }
-      );
+      const res = await fetch(`${process.env.URL}/quizgenai/save-quiz-result`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.user?.backendToken}`,
+        },
+        body: JSON.stringify({
+          userId: session?.user?.id,
+          topicId: params.id,
+          quizId: result.quizId,
+          score: correctCount,
+          totalPoints: quizes.length,
+          selectedAnswers: selectedAnswers,
+        }),
+      });
       const data = await res.json();
       console.log("Stats popular data:", data);
     } catch (error) {

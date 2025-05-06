@@ -19,7 +19,7 @@ export default function QuizForm(props: QuizFormProps) {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8000/quizgenai/generate", {
+      const res = await fetch(`${process.env.URL}/quizgenai/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

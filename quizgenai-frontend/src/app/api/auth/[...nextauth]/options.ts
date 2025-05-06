@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       try {
         // Send to your backend immediately after successful Google sign-in
-        const res = await fetch("http://localhost:8000/auth/google-auth", {
+        const res = await fetch(`${process.env.URL}/auth/google-auth`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
