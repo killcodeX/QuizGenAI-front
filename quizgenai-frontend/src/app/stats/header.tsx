@@ -24,7 +24,9 @@ const getInitials = (name: string) => {
 // Get user level based on performance
 const getUserLevel = (hasData: boolean, userData: UserData) => {
   if (!hasData) return "Quiz Novice";
-  const total = userData.performance?.totalQuestions || 0;
+  const total =
+    (userData.performance?.correctAnswers || 0) +
+    (userData.performance?.wrongAnswers || 0);
   if (total > 100) return "Quiz Master";
   if (total > 50) return "Quiz Expert";
   if (total > 20) return "Quiz Enthusiast";
