@@ -41,7 +41,7 @@ export default function QuizPage() {
   const fetchUserHistory = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8000/quizgenai/history", {
+      const res = await fetch(`${process.env.URL}/quizgenai/history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +64,7 @@ export default function QuizPage() {
   const fetchPopularTopic = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8000/quizgenai/popular", {
+      const res = await fetch(`${process.env.URL}/quizgenai/popular`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
