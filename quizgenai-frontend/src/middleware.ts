@@ -58,11 +58,19 @@ export function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith(route)
   );
 
+  console.log(
+    "this is from middleware, isProtectedRoute value is -->",
+    isProtectedRoute
+  );
+
   if (isProtectedRoute) {
     const token = req.cookies.get("token")?.value;
     const nextAuthSession =
       req.cookies.get("next-auth.session-token")?.value ||
       req.cookies.get("__Secure-next-auth.session-token")?.value;
+
+    console.log("this is from middleware, token value is -->", token);
+    console.log("this is from middleware, nextAuthSession value is -->", token);
 
     if (!token && !nextAuthSession) {
       console.log("Unauthorized access to", req.nextUrl.pathname);
