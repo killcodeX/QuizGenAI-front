@@ -100,6 +100,18 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       console.log("*********************************");
       console.log("Redirect called with URL:", url);
+      console.log("Redirect called with baseUrl:", baseUrl);
+      console.log(
+        "if url contains login error",
+        url.startsWith(`${baseUrl}/login?error=`)
+      );
+      console.log("if url contains /quiz", url.includes("/quiz"));
+      console.log(
+        "login, register, or base URL, redirect to quiz",
+        url === baseUrl ||
+          url === `${baseUrl}/login` ||
+          url === `${baseUrl}/register`
+      );
       console.log("*********************************");
 
       // Handle error redirects
