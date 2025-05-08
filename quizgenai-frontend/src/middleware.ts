@@ -8,14 +8,21 @@ export function middleware(req: NextRequest) {
   // Check for either your custom token or the NextAuth session token
   const token = req.cookies.get("token")?.value;
   const nextAuthSession = req.cookies.get("next-auth.session-token")?.value;
+  const secureNextAuthSession = req.cookies.get(
+    "__Secure-next-auth.session-token"
+  )?.value;
 
-  console.log("Token present:", !!token);
-  console.log("NextAuth session present:", !!nextAuthSession);
+  console.log("NextAuth cookies:", {
+    regular: !!nextAuthSession,
+    secure: !!secureNextAuthSession,
+    token: !!token,
+  });
 
   // If trying to access protected route
   if (req.nextUrl.pathname.startsWith("/quiz")) {
     // No auth - redirect to login
-    if (!token && !nextAuthSession) {
+    if (!token && !nextAuthSession && !secureNextAuthSession) {
+      console.log("No valid session found, redirecting to login");
       return NextResponse.redirect(new URL("/login", req.url));
     }
 

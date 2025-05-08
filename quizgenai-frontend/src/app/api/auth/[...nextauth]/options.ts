@@ -28,6 +28,22 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+  cookies: {
+    sessionToken: {
+      name: `${
+        process.env.NODE_ENV === "production" ? "__Secure-" : ""
+      }next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        // Don't set a custom domain for vercel.app domains
+        // The default behavior will work correctly
+      },
+    },
+  },
   callbacks: {
     async signIn({ user, account }) {
       try {
@@ -43,6 +59,8 @@ export const authOptions: NextAuthOptions = {
         });
 
         const data = await res.json();
+
+        console.log("this is callback signin data --->", data);
 
         if (!res.ok) {
           // Attach error info to the error URL
@@ -80,9 +98,9 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // console.log("*********************************");
-      // console.log("Redirect called with URL:", url);
-      // console.log("*********************************");
+      console.log("*********************************");
+      console.log("Redirect called with URL:", url);
+      console.log("*********************************");
 
       // Handle error redirects
       if (url.startsWith(`${baseUrl}/login?error=`)) {
@@ -114,4 +132,5 @@ export const authOptions: NextAuthOptions = {
     signIn: "/login",
     error: "/auth/error", // Keep this for system errors
   },
+  debug: process.env.NODE_ENV === "development", // Enable debug logs in development
 };
