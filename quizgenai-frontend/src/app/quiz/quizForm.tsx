@@ -19,16 +19,19 @@ export default function QuizForm(props: QuizFormProps) {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch(`${process.env.URL}/quizgenai/generate`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          topic: topic,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/quizgenai/generate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            topic: topic,
+          }),
+        }
+      );
       const data = await res.json();
       console.log("Stats history data:", data);
       router.push(`/quiz/1`);

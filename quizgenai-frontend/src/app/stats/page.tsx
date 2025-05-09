@@ -24,16 +24,19 @@ export default function Stats() {
     //${process.env.URL}
     try {
       setLoading(true);
-      const res = await fetch(`/quizgenai/stats`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.user?.backendToken}`,
-        },
-        body: JSON.stringify({
-          email: session?.user?.email,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/quizgenai/stats`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.backendToken}`,
+          },
+          body: JSON.stringify({
+            email: session?.user?.email,
+          }),
+        }
+      );
       const data = await res.json();
       console.log("Stats data:", data);
       setUserData(data);

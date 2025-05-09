@@ -41,16 +41,19 @@ export default function QuizQuestions() {
       setLoading(true);
       const isQuizId = searchParams.get("fromHistory") === "true";
       //${process.env.URL}
-      const res = await fetch(`/quizgenai/quizes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.user?.backendToken}`,
-        },
-        body: JSON.stringify({
-          ...(isQuizId ? { quiz_id: params.id } : { topic_id: params.id }),
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/quizgenai/quizes`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.backendToken}`,
+          },
+          body: JSON.stringify({
+            ...(isQuizId ? { quiz_id: params.id } : { topic_id: params.id }),
+          }),
+        }
+      );
       const data = await res.json();
       //const fakeData: any = await getData();
       //console.log("Stats fake data:", data);
@@ -179,21 +182,24 @@ export default function QuizQuestions() {
   const handleShowResult = async () => {
     //${process.env.URL}
     try {
-      const res = await fetch(`/quizgenai/save-quiz-result`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.user?.backendToken}`,
-        },
-        body: JSON.stringify({
-          userId: session?.user?.id,
-          topicId: params.id,
-          quizId: result.quizId,
-          score: correctCount,
-          totalPoints: quizes.length,
-          selectedAnswers: selectedAnswers,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/quizgenai/save-quiz-result`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.backendToken}`,
+          },
+          body: JSON.stringify({
+            userId: session?.user?.id,
+            topicId: params.id,
+            quizId: result.quizId,
+            score: correctCount,
+            totalPoints: quizes.length,
+            selectedAnswers: selectedAnswers,
+          }),
+        }
+      );
       const data = await res.json();
       console.log("Stats popular data:", data);
     } catch (error) {

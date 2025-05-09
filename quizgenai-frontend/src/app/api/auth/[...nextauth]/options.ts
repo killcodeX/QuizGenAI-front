@@ -24,11 +24,11 @@ declare module "next-auth/jwt" {
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
   cookies: {
     sessionToken: {
       name: `${
@@ -48,15 +48,18 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       try {
         // Send to your backend immediately after successful Google sign-in
-        const res = await fetch(`${process.env.URL}/auth/google-auth`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: user.email,
-            name: user.name,
-            googleId: user.id || account?.providerAccountId,
-          }),
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_URL}/auth/google-auth`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: user.email,
+              name: user.name,
+              googleId: user.id || account?.providerAccountId,
+            }),
+          }
+        );
 
         const data = await res.json();
 
@@ -98,9 +101,9 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async redirect({ url, baseUrl }) {
-      console.log("*********************************");
-      console.log("Redirect called with URL:", url);
-      console.log("Redirect called with baseUrl:", baseUrl);
+      // console.log("*********************************");
+      // console.log("Redirect called with URL:", url);
+      // console.log("Redirect called with baseUrl:", baseUrl);
 
       // Parse the URL to properly check paths
       let parsedUrl;

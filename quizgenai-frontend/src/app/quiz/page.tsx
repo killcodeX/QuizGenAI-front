@@ -42,16 +42,19 @@ export default function QuizPage() {
     //${process.env.URL}
     try {
       setLoading(true);
-      const res = await fetch(`/quizgenai/history`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.user?.backendToken}`,
-        },
-        body: JSON.stringify({
-          email: session?.user?.email,
-        }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/quizgenai/history`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.backendToken}`,
+          },
+          body: JSON.stringify({
+            email: session?.user?.email,
+          }),
+        }
+      );
       const data = await res.json();
       console.log("Stats history data:", data);
       setHistory(data.quizHistory);
@@ -66,13 +69,16 @@ export default function QuizPage() {
     //console.log(process.env.URL);
     try {
       setLoading(true);
-      const res = await fetch(`/quizgenai/popular`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.user?.backendToken}`,
-        },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/quizgenai/popular`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.user?.backendToken}`,
+          },
+        }
+      );
       const data = await res.json();
       console.log("Stats popular data:", data);
       setPopularTopics(data.popularTopics);
