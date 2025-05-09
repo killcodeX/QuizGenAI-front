@@ -40,8 +40,8 @@ export default function QuizQuestions() {
     try {
       setLoading(true);
       const isQuizId = searchParams.get("fromHistory") === "true";
-
-      const res = await fetch(`${process.env.URL}/quizgenai/quizes`, {
+      //${process.env.URL}
+      const res = await fetch(`/quizgenai/quizes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -177,8 +177,9 @@ export default function QuizQuestions() {
   const score = (correctCount / quizes.length) * 100;
 
   const handleShowResult = async () => {
+    //${process.env.URL}
     try {
-      const res = await fetch(`${process.env.URL}/quizgenai/save-quiz-result`, {
+      const res = await fetch(`/quizgenai/save-quiz-result`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

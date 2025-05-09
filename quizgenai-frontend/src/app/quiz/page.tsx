@@ -39,9 +39,10 @@ export default function QuizPage() {
   // ];
 
   const fetchUserHistory = async () => {
+    //${process.env.URL}
     try {
       setLoading(true);
-      const res = await fetch(`${process.env.URL}/quizgenai/history`, {
+      const res = await fetch(`/quizgenai/history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,9 +63,10 @@ export default function QuizPage() {
   };
 
   const fetchPopularTopic = async () => {
+    //console.log(process.env.URL);
     try {
       setLoading(true);
-      const res = await fetch(`${process.env.URL}/quizgenai/popular`, {
+      const res = await fetch(`/quizgenai/popular`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -21,9 +21,10 @@ export default function Stats() {
   const [popularTopics, setPopularTopics] = useState([]);
 
   const fetchUserData = async () => {
+    //${process.env.URL}
     try {
       setLoading(true);
-      const res = await fetch(`${process.env.URL}/quizgenai/stats`, {
+      const res = await fetch(`/quizgenai/stats`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,9 +46,10 @@ export default function Stats() {
   };
 
   const fetchUserHistory = async () => {
+    //${process.env.URL}
     try {
       setLoading(true);
-      const res = await fetch(`${process.env.URL}/quizgenai/history`, {
+      const res = await fetch(`/quizgenai/history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
