@@ -165,7 +165,7 @@ export default function QuizPage() {
               history.length > 1 ? "md:grid-cols-2" : ""
             }`}
           >
-            {history.map((quiz: any) => (
+            {history.slice(0, 2).map((quiz: any) => (
               <div
                 key={quiz.id}
                 className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4 hover:bg-gray-800/80 transition-all"
@@ -180,20 +180,31 @@ export default function QuizPage() {
                 <p className="text-gray-400 text-sm mt-2">{quiz.date}</p>
                 <div className="mt-3 flex gap-2">
                   <button
-                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 rounded text-sm transition-all"
+                    className="px-3 py-1 bg-indigo-500 hover:bg-indigo-600 rounded text-sm transition-all"
                     onClick={() =>
                       router.push(`/quiz/${quiz.quizId}?fromHistory=true`)
                     }
                   >
                     Retry
                   </button>
-                  {/* <button className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-all">
-                    Share
-                  </button> */}
+                  <button className="bg-green-500 hover:bg-green-600 text-sm py-1 px-3 rounded-md transition-colors">
+                    New Set
+                  </button>
+                  <button className="bg-purple-500 hover:bg-purple-600 text-sm py-1 px-3 rounded-md transition-colors ml-auto">
+                    Random Mix
+                  </button>
                 </div>
               </div>
             ))}
           </div>
+          {history.length > 2 ? (
+            <button
+              className="block mx-auto my-5 py-3 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-all"
+              onClick={() => router.push(`/stats`)}
+            >
+              See More
+            </button>
+          ) : null}
         </div>
       )}
       <div className="w-full md:w-[800] mt-6 flex flex-col justify-center items-center">
